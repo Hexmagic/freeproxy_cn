@@ -1,7 +1,7 @@
 免费代理整理 ，开发ing🐱‍👤
 
 Proxy-Crawl:
-  ☐ 西刺代理(http://www.xicidaili.com/)
+  -[] 西刺代理(http://www.xicidaili.com/)
   ☐ 66代理(http://www.66ip.cn/areaindex_2/1.html)
   ☐ 89代理(http://www.89ip.cn/)
   ☐ 快代理(https://www.kuaidaili.com/free/)
