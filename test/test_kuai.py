@@ -1,11 +1,11 @@
 import unittest
-from freeproxy.channels.xici import XiCi
+from freeproxy.channels.kuai import Kuai
 import asyncio
 
 
-class Test_Xici(unittest.TestCase):
-    def test_xici(self):
-        coro = XiCi().batch()
+class Test_kuai(unittest.TestCase):
+    def Test_kuai(self):
+        coro = Kuai().batch()
         loop = asyncio.get_event_loop()
         rst = loop.run_until_complete(asyncio.ensure_future(coro))
         print(rst)

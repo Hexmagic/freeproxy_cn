@@ -1,11 +1,11 @@
 import unittest
-from freeproxy.channels.xici import XiCi
+from freeproxy.channels.eight9 import Eight9
 import asyncio
 
 
-class Test_Xici(unittest.TestCase):
-    def test_xici(self):
-        coro = XiCi().batch()
+class Test_eight9(unittest.TestCase):
+    def test_eight9(self):
+        coro = Eight9().batch()
         loop = asyncio.get_event_loop()
         rst = loop.run_until_complete(asyncio.ensure_future(coro))
         print(rst)
