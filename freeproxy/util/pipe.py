@@ -1,6 +1,7 @@
 import functools
 import json
 from lxml import etree
+from freeproxy.model import Proxy
 
 
 class pipe(object):
@@ -35,3 +36,21 @@ def to_dict(obj):
 @pipe
 def to_doc(obj):
     return etree.HTML(obj)
+
+
+@pipe
+def extra_xpath(doc, xpath=None):
+    return doc.xpath(xpath)
+
+
+@pipe
+def safe_extra(may_empty_lst):
+    if may_empty_lst:
+        return may_empty_lst[0].strip()
+    else:
+        return ''
+
+
+@pipe
+def to_proxy(ele):
+    return Proxy(ele[0], ele[1])
