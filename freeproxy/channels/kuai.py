@@ -1,6 +1,7 @@
 from freeproxy.channels import Channel
-from freeproxy.util.pipe import  to_doc, extra_xpath, safe_extra
-
+from freeproxy.util.pipe import to_doc, extra_xpath, safe_extra
+import aiohttp
+import asyncio
 
 class Kuai(Channel):
     start_urls = ['https://www.kuaidaili.com/free/intr/',
@@ -13,7 +14,8 @@ class Kuai(Channel):
             yield url + '{}/'.format(self.page_generator[url])
 
     async def parse_page(self, session, url):
-        proxys = await self.get(session, url) >> to_doc >> extra_xpath("//table//tr[position()>1]")
+        text = await self.get(session, url)
+        proxys = text >> to_doc >> extra_xpath("//table//tr[position()>1]")
         rst = []
         for proxy in proxys:
             host = proxy >> extra_xpath(
@@ -21,4 +23,17 @@ class Kuai(Channel):
             port = proxy >> extra_xpath(
                 "./td[position()=2]/text()") >> safe_extra
             rst.append([host, port])
+        return rst
+
+    async def batch(self):
+        tasks = []
+        rst = []
+        async with aiohttp.ClientSession() as session:
+            if not self.start_urls:
+                self.start_urls = await self.generate_start_urls(session)
+            for url in self.start_urls:
+                for page in self.next_page(url):
+                    rst.append(await asyncio.ensure_future(
+                        self.parse_page(session, page)))
+                    await asyncio.sleep(1)
         return rst

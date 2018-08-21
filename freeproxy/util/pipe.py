@@ -46,7 +46,7 @@ def extra_xpath(doc, xpath=None):
 @pipe
 def safe_extra(may_empty_lst):
     if may_empty_lst:
-        return may_empty_lst[0].strip()
+        return may_empty_lst[0].strip('" ').strip("'")
     else:
         return ''
 
