@@ -1,9 +1,0 @@
-MAX_DELAY : 10
-REFRESH_DELAY : 3600
-SERVER_PORT: 8090
-REDIS_HOST: '127.0.0.1'
-REDIS_PORT: 6379
-TEST_URLS:
-  - 'https://www.baidu.com'
-  - 'http://www.httpbin.org'
-MAX_CONCURRENT_ONE_PROXY: 32

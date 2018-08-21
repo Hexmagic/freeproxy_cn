@@ -14,5 +14,5 @@ class XiaoSu(Channel):
         rst = []
         for proxy in proxys:
             proxy = proxy.strip().split('@')[0]
-            rst.append(proxy.split(":"))
+            rst.append(tuple(proxy.split(":")))
         return rst

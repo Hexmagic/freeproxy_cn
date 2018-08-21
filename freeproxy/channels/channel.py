@@ -1,9 +1,11 @@
 from collections import defaultdict
 import aiohttp
 import asyncio
+from freeproxy.util.log import logger
+from config import DEBUG_FLAG, DEBUG_PORXY
 from freeproxy.util.pipe import to_doc, extra_xpath, safe_extra
 from fake_useragent import UserAgent
-
+import traceback
 
 class Channel(object):
     # 代理获取的渠道
@@ -27,7 +29,7 @@ class Channel(object):
                 "./td[position()=1]//text()") >> safe_extra
             port = proxy >> extra_xpath(
                 "./td[position()=2]//text()") >> safe_extra
-            rst.append([host, port])
+            rst.append((host, port))
         return rst
 
     @property
@@ -38,17 +40,19 @@ class Channel(object):
 
     async def get(self, session, url, headers=None):
         headers = headers or self.base_headers
-        async with session.get(url, headers=headers, ssl=False) as res:
-            return await res.text()
+        proxy = DEBUG_PORXY if DEBUG_FLAG else None
+        try:
+            async with session.get(url, headers=headers, timeout=15, proxy=proxy, ssl=False) as res:
+                return await res.text()
+        except Exception as e:
+            logger.error(traceback.format_exc())
+            return ''
 
     async def generate_start_urls(self, session):
         pass
 
     async def batch(self):
         tasks = []
-
-        rst = None
-
         async with aiohttp.ClientSession() as session:
             if not self.start_urls:
                 self.start_urls = await self.generate_start_urls(session)

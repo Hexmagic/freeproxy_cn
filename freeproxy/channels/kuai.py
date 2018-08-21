@@ -3,6 +3,7 @@ from freeproxy.util.pipe import to_doc, extra_xpath, safe_extra
 import aiohttp
 import asyncio
 
+
 class Kuai(Channel):
     start_urls = ['https://www.kuaidaili.com/free/intr/',
                   'https://www.kuaidaili.com/free/inha/']
@@ -22,11 +23,10 @@ class Kuai(Channel):
                 "./td[position()=1]/text()") >> safe_extra
             port = proxy >> extra_xpath(
                 "./td[position()=2]/text()") >> safe_extra
-            rst.append([host, port])
+            rst.append((host, port))
         return rst
 
     async def batch(self):
-        tasks = []
         rst = []
         async with aiohttp.ClientSession() as session:
             if not self.start_urls:

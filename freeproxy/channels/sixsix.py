@@ -17,5 +17,5 @@ class SixSix(Channel):
                 "./td[position()=1]/text()") >> safe_extra
             port = proxy >> extra_xpath(
                 "./td[position()=1]/text()") >> safe_extra
-            rst.append([host, port])
+            rst.append((host, port))
         return rst

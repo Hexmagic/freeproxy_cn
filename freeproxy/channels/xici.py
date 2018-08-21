@@ -20,5 +20,5 @@ class XiCi(Channel):
                 './/td[position()=2]/text()') >> safe_extra
             port = proxy >> extra_xpath(
                 './/td[position()=3]/text()') >> safe_extra
-            rst.append([host, port])
+            rst.append((host, port))
         return rst

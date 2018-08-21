@@ -1,10 +1,10 @@
 from freeproxy.channels import Channel
-from freeproxy.util.pipe import to_str, to_doc, extra_xpath, safe_extra
+from freeproxy.util.pipe import to_doc, extra_xpath, safe_extra
 
 
 class Eight9(Channel):
     start_urls = ['http://www.89ip.cn/index_1.html']
-    page = 10
+    page = 3
 
     def next_page(self, url):
         while self.page_generator[url] < self.page:
@@ -19,5 +19,5 @@ class Eight9(Channel):
                 "./td[position()=1]/text()") >> safe_extra
             port = proxy >> extra_xpath(
                 "./td[position()=2]/text()") >> safe_extra
-            rst.append([host, port])
+            rst.append((host, port))
         return rst
