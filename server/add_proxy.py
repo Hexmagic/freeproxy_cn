@@ -1,11 +1,10 @@
 import asyncio
 from freeproxy.channels import CHANS
 import aredis
-from config import PROXY_KEY, REDIS_DB, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT
+from config import REDIS_DB, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT
 from freeproxy.model import Proxy
 import itertools
 from concurrent.futures import ThreadPoolExecutor
-
 from freeproxy.channels import CHANS, Channel
 
 

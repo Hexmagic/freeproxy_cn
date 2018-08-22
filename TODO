@@ -6,11 +6,15 @@ Proxy-Crawl:
   ✔ 3366代理(http://www.ip3366.net/) @done(18-08-20 17:57)
   ✔ 小舒代理(http://www.xsdaili.com/) @done(18-08-21 16:16)
   ✔ seo方法(http://ip.seofangfa.com/) @done(18-08-21 16:28)
-  ✘ 无忧代理(http://www.data5u.com/free/index.html) @cancelled(18-08-21 16:34)
-  ✘ 秘密代理(http://www.mimiip.com/) @cancelled(18-08-21 16:34)
+    ✘ 秘密代理(http://www.mimiip.com/) @cancelled(18-08-21 16:34)
   ✘ free-proxy代理(http://free-proxy.cz/zh/proxylist/country/HK/all/ping/all) @cancelled(18-08-21 16:55)
   ✘ gather-proxy(http://www.gatherproxy.com/proxylist/country/?c=Hong%20Kong) @cancelled(18-08-21 16:37)
   ✘ nova代理(https://www.proxynova.com/proxy-server-list/country-hk/) @cancelled(18-08-21 16:37)
+  ✘ 米扑代理(https://proxy.mimvp.com/free.php) @cancelled(18-08-22 14:04) #图片识别
+  ✔ 三一代理(https://31f.cn/) @done(18-08-22 14:10)
+  ✔ crossin实验室(http://lab.crossincode.com/proxy/) @done(18-08-22 14:16)
+  ✔ ipjiang(http://ip.jiangxianli.com/) @done(18-08-22 14:23)
+  ✔ ip海(http://www.iphai.com/free/ng) @done(18-08-22 14:26)
 Server:
   ☐ 代理服务器
   ☐ 代理分发

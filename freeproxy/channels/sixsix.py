@@ -1,21 +1,20 @@
 from freeproxy.channels import Channel
-from freeproxy.util.pipe import to_doc, extra_xpath, safe_extra
+from freeproxy.util.pipe import to_doc, extra_xpath
 
 
 class SixSix(Channel):
-    start_urls = []
+    start_urls = [
+        'http://www.66ip.cn/nmtq.php?getnum=300&isp=0&anonymoustype=2&start=&ports=&export=&ipaddress=&area=1&proxytype=1&api=66ip']
 
-    async def generate_start_urls(self, session):
-        proxy_urls = await self.get(session, 'http://www.66ip.cn/index.html') >> to_doc >> extra_xpath('//ul[@class="textlarge22"]/li[position()>1]/a/@href')
-        return ['http://www.66ip.cn' + ele for ele in proxy_urls]
+    def next_page(self, url):
+        yield url
 
     async def parse_page(self, session, url):
-        proxys = await self.get(session, url) >> to_doc >> extra_xpath("//table//tr[position()>1]")
+        text = await self.get(session, url)
+        proxys = text >> to_doc >> extra_xpath("//body//text()")
         rst = []
-        for proxy in proxys:
-            host = proxy >> extra_xpath(
-                "./td[position()=1]/text()") >> safe_extra
-            port = proxy >> extra_xpath(
-                "./td[position()=1]/text()") >> safe_extra
+        for proxy in proxys[:-10]:
+            proxy = proxy.strip('" \t\r\n')
+            [host, port] = proxy.split(':')
             rst.append((host, port))
         return rst

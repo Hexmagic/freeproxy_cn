@@ -1,4 +1,3 @@
-from config import TEST_URL
 import aiohttp
 import time
 from fake_useragent import UserAgent
@@ -15,14 +14,14 @@ class Proxy(dict):
     def proxy_url(self):
         return 'http://{}:{}'.format(self.host, self.port)
 
-    async def test(self):
+    async def test_url(self, url):
         async with aiohttp.ClientSession() as session:
             header = {
                 'User-Agent': UserAgent().random
             }
             try:
                 start = time.time()
-                async with session.get(TEST_URL, headers=header, proxy=self.proxy_url, timeout=20, ssl=False) as res:
+                async with session.get(url, headers=header, proxy=self.proxy_url, timeout=20, ssl=False) as res:
                     await res.text()
                     elpased = time.time() - start
                     logger.info("proxy {} elpased {}".format(
@@ -31,3 +30,12 @@ class Proxy(dict):
 
             except Exception:
                 return (float('inf'), self.proxy_url)
+
+    async def test_google(self):
+        return await self.test_url('https://www.google.com')
+
+    async def test_baidu(self):
+        return await self.test_url('https://www.baidu.com')
+
+    async def test_httpbin(self):
+        return await self.test_url('http://www.httpbin.org')

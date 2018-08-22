@@ -7,6 +7,7 @@ from freeproxy.util.pipe import to_doc, extra_xpath, safe_extra
 from fake_useragent import UserAgent
 import traceback
 
+
 class Channel(object):
     # 代理获取的渠道
     page = 5
@@ -44,7 +45,7 @@ class Channel(object):
         try:
             async with session.get(url, headers=headers, timeout=15, proxy=proxy, ssl=False) as res:
                 return await res.text()
-        except Exception as e:
+        except Exception:
             logger.error(traceback.format_exc())
             return ''
 
@@ -57,7 +58,6 @@ class Channel(object):
             if not self.start_urls:
                 self.start_urls = await self.generate_start_urls(session)
             for url in self.start_urls:
-                print(url)
                 for page in self.next_page(url):
                     tasks.append(asyncio.ensure_future(
                         self.parse_page(session, page)))
