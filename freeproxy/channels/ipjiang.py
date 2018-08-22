@@ -9,7 +9,7 @@ class IPJiang(Channel):
     def next_page(self, url):
         while self.page_generator[url] < self.page:
             self.page_generator[url] += 1
-            yield self.start_urls[0].format(self.page_generator)
+            yield self.start_urls[0].format(self.page_generator[url])
 
     async def parse_page(self, session, url):
         text = await self.get(session, url)

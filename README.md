@@ -1,4 +1,4 @@
-免费代理整理 ，开发ing🐱‍👤
+免费HTTPS代理整理 ，开发ing🐱‍👤
 
 ```
 Proxy-Crawl:
@@ -13,7 +13,6 @@ Proxy-Crawl:
   ✘ free-proxy代理(http://free-proxy.cz/zh/proxylist/country/HK/all/ping/all) @cancelled(18-08-21 16:55)
   ✘ gather-proxy(http://www.gatherproxy.com/proxylist/country/?c=Hong%20Kong) @cancelled(18-08-21 16:37)
   ✘ nova代理(https://www.proxynova.com/proxy-server-list/country-hk/) @cancelled(18-08-21 16:37)
-  ✘ 米扑代理(https://proxy.mimvp.com/free.php) @cancelled(18-08-22 14:04) #图片识别
   ✔ 三一代理(https://31f.cn/) @done(18-08-22 14:10)
   ✔ crossin实验室(http://lab.crossincode.com/proxy/) @done(18-08-22 14:16)
   ✔ ipjiang(http://ip.jiangxianli.com/) @done(18-08-22 14:23)

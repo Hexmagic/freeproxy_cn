@@ -1,7 +1,6 @@
 import functools
 import json
 from lxml import etree
-from freeproxy.model import Proxy
 
 
 class pipe(object):
@@ -50,7 +49,3 @@ def safe_extra(may_empty_lst):
     else:
         return ''
 
-
-@pipe
-def to_proxy(ele):
-    return Proxy(ele[0], ele[1])

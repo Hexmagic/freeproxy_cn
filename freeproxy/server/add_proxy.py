@@ -1,17 +1,19 @@
 import asyncio
-from freeproxy.channels import CHANS
-import aredis
-from config import REDIS_DB, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT
-from freeproxy.model import Proxy
 import itertools
 from concurrent.futures import ThreadPoolExecutor
+
+from freeproxy.util.log import logger
 from freeproxy.channels import CHANS, Channel
+from freeproxy.config import PROXY_KEY, REFRESH_DELAY, SITE_NUM
+from freeproxy.util.proxy import Proxy
+from freeproxy.util.tools import getRedis
+
+EXECUTOR = ThreadPoolExecutor(max_workers=SITE_NUM)
 
 
 async def grab_and_store(channel):
     assert issubclass(channel, Channel), "Not support Class"
-    client = aredis.StrictRedis(
-        host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD, db=REDIS_DB)
+    client = getRedis()
     coro = channel().batch()
     proxy_list = await asyncio.gather(coro)
     unique = set(list(itertools.chain(*itertools.chain(*proxy_list))))
@@ -19,16 +21,16 @@ async def grab_and_store(channel):
     for inner in unique:
         if not inner[0]:
             continue
-        if str(inner[1]) == '80':
-            continue
-        tasks.append(Proxy(*inner).test())
+        tasks.append(Proxy(*inner).test_baidu())
     rst = await asyncio.gather(*tasks)
-    rst = list(filter(lambda x: x[0] != float('inf'), rst))
+    rst = list(filter(lambda x: x.elapsed != float('inf'), rst))
+    if not rst:
+        return
     await client.sadd("proxy", *rst)
     print("channel {} test passed ".format(channel))
 
 
-async def startup():
+def startup():
     def func(channel):
         new_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(new_loop)
@@ -36,14 +38,14 @@ async def startup():
             asyncio.ensure_future(grab_and_store(channel)))
         return rst
     loop = asyncio.get_event_loop()
-    executor = ThreadPoolExecutor(max_workers=7)
-    [loop.run_in_executor(executor, func, channel) for channel in CHANS]
+    [loop.run_in_executor(EXECUTOR, func, channel) for channel in CHANS]
+    loop.call_later(REFRESH_DELAY, startup)
 
 
 def main():
-    coro = startup()
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(asyncio.ensure_future(coro))
+    loop.call_soon(startup)
+    loop.run_forever()
 
 
 if __name__ == '__main__':

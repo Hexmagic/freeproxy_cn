@@ -2,10 +2,12 @@ from collections import defaultdict
 import aiohttp
 import asyncio
 from freeproxy.util.log import logger
-from config import DEBUG_FLAG, DEBUG_PORXY
+from freeproxy.config import DEBUG_FLAG, DEBUG_PORXY
 from freeproxy.util.pipe import to_doc, extra_xpath, safe_extra
 from fake_useragent import UserAgent
 import traceback
+
+__all__ = ('Channel')
 
 
 class Channel(object):
@@ -17,6 +19,7 @@ class Channel(object):
     start_urls = []
     page_generator = defaultdict(int)
     headers = None
+    TIMEOUT = 20
 
     def next_page(self, url):
         yield url
@@ -43,9 +46,10 @@ class Channel(object):
         headers = headers or self.base_headers
         proxy = DEBUG_PORXY if DEBUG_FLAG else None
         try:
-            async with session.get(url, headers=headers, timeout=15, proxy=proxy, ssl=False) as res:
+            async with session.get(url, headers=headers, timeout=self.TIMEOUT, proxy=proxy, ssl=False) as res:
                 return await res.text()
         except Exception:
+            logger.error(url)
             logger.error(traceback.format_exc())
             return ''
 
