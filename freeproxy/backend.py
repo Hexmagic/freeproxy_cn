@@ -2,7 +2,6 @@ import asyncio
 import itertools
 from concurrent.futures import ThreadPoolExecutor
 
-from freeproxy.util.log import logger
 from freeproxy.channels import CHANS, Channel
 from freeproxy.config import PROXY_KEY, REFRESH_DELAY, SITE_NUM
 from freeproxy.util.proxy import Proxy
@@ -26,7 +25,7 @@ async def grab_and_store(channel):
     rst = list(filter(lambda x: x.elapsed != float('inf'), rst))
     if not rst:
         return
-    await client.sadd("proxy", *rst)
+    await client.sadd(PROXY_KEY, *rst)
     print("channel {} test passed ".format(channel))
 
 

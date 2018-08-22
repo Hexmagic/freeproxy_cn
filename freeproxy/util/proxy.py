@@ -12,11 +12,9 @@ class TestRst(dict):
 
     def __lt__(self, other):
         return self.elapsed <= other.elapsed
-    
+
     def __gt__(self, other):
         return self.elapsed > other.elapsed
-
-    
 
 
 class Proxy(dict):

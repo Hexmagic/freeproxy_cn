@@ -10,5 +10,3 @@ class Ip3366(Channel):
         while self.page_generator[url] < self.page:
             self.page_generator[url] += 1
             yield 'http://www.ip3366.net/?stype=1&page=' + str(self.page_generator[url])
-
-    
