@@ -19,12 +19,8 @@ Proxy-Crawl:
   ✔ ip海(http://www.iphai.com/free/ng) @done(18-08-22 14:26)
 Server:
   ☐ 代理服务器
-  ☐ 代理分发
-  ☐ 代理任务
+  ☐ 代理定时抓取任务
   ☐ 代理配置
-  ☐ 文档约束
-  ☐ 自动部署
-
 ```
 
 

@@ -6,8 +6,9 @@ from logzero import logger
 
 class TestRst(dict):
     def __init__(self, elapsed, proxy):
-        super(TestRst, self).__init__(proxy=proxy, elapsed=elapsed)
+        super(TestRst, self).__init__(proxy=proxy)
         self.elapsed = elapsed
+        self.proxy = proxy
 
     def __lt__(self, other):
         return self.elapsed <= other.elapsed
