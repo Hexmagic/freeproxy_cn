@@ -38,7 +38,7 @@ class IPhuan(Channel):
         for proxy in proxys:
             try:
                 host, port = (proxy >> safe_extra).split(':')
-            except:
+            except Exception:
                 continue
             rst.append((host, port))
         return rst
