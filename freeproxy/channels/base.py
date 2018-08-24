@@ -58,12 +58,15 @@ class Channel(object):
 
     async def batch(self):
         tasks = []
-        async with aiohttp.ClientSession() as session:
-            if not self.start_urls:
-                self.start_urls = await self.generate_start_urls(session)
-            for url in self.start_urls:
-                for page in self.next_page(url):
-                    tasks.append(asyncio.ensure_future(
-                        self.parse_page(session, page)))
-            rst = await asyncio.gather(*tasks)
-        return rst
+        try:
+            async with aiohttp.ClientSession() as session:
+                if not self.start_urls:
+                    self.start_urls = await self.generate_start_urls(session)
+                for url in self.start_urls:
+                    for page in self.next_page(url):
+                        tasks.append(asyncio.ensure_future(
+                            self.parse_page(session, page)))
+                rst = await asyncio.gather(*tasks)
+            return rst
+        except Exception:
+            logger.error(traceback.format_exc())

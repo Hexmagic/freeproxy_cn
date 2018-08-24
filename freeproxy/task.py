@@ -23,6 +23,7 @@ async def grab_and_store(channel):
         tasks.append(Proxy(*inner).test_baidu())
     rst = await asyncio.gather(*tasks)
     rst = list(filter(lambda x: x.elapsed != float('inf'), rst))
+    rst = list(map(lambda x: x.proxy, rst))
     if not rst:
         return
     await client.sadd(PROXY_KEY, *rst)
