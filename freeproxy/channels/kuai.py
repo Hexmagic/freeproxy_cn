@@ -1,5 +1,5 @@
 from freeproxy.channels import Channel
-from freeproxy.util.pipe import to_doc, extra_xpath, safe_extra
+from freeproxy.util.pipe import extra_xpath, safe_extra, to_doc
 
 
 class Kuai(Channel):
@@ -15,11 +15,6 @@ class Kuai(Channel):
         }
 
     def generator(self, url):
-        loop = self.get_loop()
-        rst = loop.run_until_complete(self.page_generator(url))
-        return rst
-
-    async def page_generator(self, url):
         rst, i = [], 0
         while i < self.PAGE:
             i += 1

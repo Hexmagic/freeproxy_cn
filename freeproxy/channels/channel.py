@@ -1,11 +1,13 @@
-import aiohttp
 import asyncio
-from freeproxy.util.db import getRedis
-from information.conf import DEBUG_PROXY, DEBUG_SYMBOL, PROXY_KEY
-from fake_useragent import UserAgent
-from freeproxy.util.log import logger, get_trace
-from freeproxy.util.pipe import extra_host, to_doc, extra_xpath, safe_extra
 from collections import defaultdict
+
+import aiohttp
+from fake_useragent import UserAgent
+
+from freeproxy.util.db import getRedis
+from freeproxy.util.log import get_trace, logger
+from freeproxy.util.pipe import extra_host, extra_xpath, safe_extra, to_doc
+from information.conf import DEBUG_PROXY, DEBUG_SYMBOL, PROXY_KEY
 
 
 class Channel(object):
@@ -114,27 +116,31 @@ class Channel(object):
             text = await res.text()
             return text
 
+    async def prpare(self, session):
+        '''
+        do some thing before crawl , see xiaosu.py
+        '''
+        pass
+
     async def run(self):
-        connector = aiohttp.TCPConnector(limit=100, limit_per_host=self.LIMIT)
-        rst = []
-        session = aiohttp.ClientSession(connector=connector)
-        tasks = []
-        if self.SYNC:
-            rst = []
-            logger.info("request performed sync")
-            for func, urls in self.funcmap.items():
-                for url in urls:
-                    ele = await asyncio.gather(asyncio.ensure_future(func(session, url)))
-                    rst += ele
-                    await asyncio.sleep(self.REQUEST_DELAY)
+        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100, limit_per_host=self.LIMIT)) as session:
+            await self.prpare(session)
+            tasks = []
+            if self.SYNC:
+                rst = []
+                logger.info("request performed sync")
+                for func, urls in self.funcmap.items():
+                    for url in urls:
+                        ele = await asyncio.gather(asyncio.ensure_future(func(session, url)))
+                        rst += ele
+                        await asyncio.sleep(self.REQUEST_DELAY)
+                return rst
+            else:
+                for func, urls in self.funcmap.items():
+                    for url in urls:
+                        tasks.append(func(session, url))
+                rst = await asyncio.gather(*tasks)
             return rst
-        else:
-            for func, urls in self.funcmap.items():
-                for url in urls:
-                    tasks.append(func(session, url))
-            rst = await asyncio.gather(*tasks)
-        # await self.store(*rst)
-        return rst
 
     async def parse_page(self, session, url):
         text = await self.get(session, url)

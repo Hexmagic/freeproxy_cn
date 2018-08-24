@@ -78,6 +78,8 @@ class TestChannel(unittest.TestCase):
 
 
 def main():
+    unittest.main()
+    return
     testsuite = unittest.TestSuite()
     testsuite.addTest(TestChannel('test_threeone'))
     unittest.TextTestRunner(verbosity=2).run(testsuite)

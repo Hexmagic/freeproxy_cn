@@ -1,6 +1,7 @@
-from freeproxy.channels import Channel
-from freeproxy.util.pipe import to_doc, extra_xpath
 import aiohttp
+
+from freeproxy.channels import Channel
+from freeproxy.util.pipe import extra_xpath, to_doc
 
 
 class XiaoSu(Channel):
@@ -8,19 +9,12 @@ class XiaoSu(Channel):
 
     def __init__(self):
         Channel.__init__(self)
+
+    async def prpare(self, session):
+        urls = await self.get(session, "http://www.xsdaili.com/") >> to_doc >> extra_xpath('//div[@class="panel-body"]//div[@class="title"]/a/@href')
         self.funcmap = {
-            self.parse_page: self.generate()
+            self.parse_page: ['http://www.xsdaili.com' + ele for ele in urls]
         }
-
-    def generate(self):
-        loop = self.get_loop()
-        rst = loop.run_until_complete(self.generate_start_urls())
-        return rst
-
-    async def generate_start_urls(self):
-        async with aiohttp.ClientSession() as session:
-            urls = await self.get(session, "http://www.xsdaili.com/") >> to_doc >> extra_xpath('//div[@class="panel-body"]//div[@class="title"]/a/@href')
-            return ['http://www.xsdaili.com' + ele for ele in urls]
 
     async def parse_page(self, session, url):
         proxys = await self.get(session, url) >> to_doc >> extra_xpath('//div[@class="cont"]/text()')
