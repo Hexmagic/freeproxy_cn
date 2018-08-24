@@ -2,11 +2,18 @@ from freeproxy.channels import Channel
 
 
 class Ip3366(Channel):
-    start_urls = ['http://www.ip3366.net/']
-    page = 10
+    PAGE = 10
     TIMEOUT = 50
 
-    def next_page(self, url):
-        while self.page_generator[url] < self.page:
-            self.page_generator[url] += 1
-            yield 'http://www.ip3366.net/?stype=1&page=' + str(self.page_generator[url])
+    def __init__(self):
+        Channel.__init__(self)
+        self.funcmap = {
+            self.parse_page: self.generator()
+        }
+
+    def generator(self):
+        rst, i = [], 0
+        while i < self.PAGE:
+            i += 1
+            rst.append('http://www.ip3366.net/?stype=1&page={}'.format(i))
+        return rst

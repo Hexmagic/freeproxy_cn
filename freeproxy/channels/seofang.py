@@ -2,7 +2,9 @@ from freeproxy.channels import Channel
 
 
 class SeoFang(Channel):
-    start_urls = ['http://ip.seofangfa.com/']
 
-    def next_page(self, url):
-        yield url
+    def __init__(self):
+        Channel.__init__(self)
+        self.funcmap = {
+            self.parse_page: ['http://ip.seofangfa.com/']
+        }

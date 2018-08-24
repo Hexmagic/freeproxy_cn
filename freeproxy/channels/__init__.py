@@ -1,4 +1,4 @@
-from .base import Channel
+from .channel import Channel
 from .crossin import Crossin
 from .eight9 import Eight9
 from .ip3366 import Ip3366
@@ -10,7 +10,8 @@ from .sixsix import SixSix
 from .threeone import ThreeOneF
 from .xiaosu import XiaoSu
 from .xici import XiCi
+from .iphuan import IPhuan
 
 CHANS = [
-    Crossin, Eight9, Ip3366, IPHai, IPJiang, Kuai, SeoFang, SixSix, ThreeOneF, XiaoSu, XiCi
+    Crossin, Eight9, Ip3366, IPHai, IPJiang, Kuai, SeoFang, SixSix, ThreeOneF, XiaoSu, XiCi, IPhuan
 ]

@@ -1,18 +1,30 @@
 from freeproxy.channels import Channel
 from freeproxy.util.pipe import to_doc, extra_xpath, safe_extra
-import aiohttp
-import asyncio
 
 
 class Kuai(Channel):
-    start_urls = ['https://www.kuaidaili.com/free/intr/',
-                  'https://www.kuaidaili.com/free/inha/']
-    page = 5
+    LIMIT = 1
+    REQUEST_DELAY = 2
+    SYNC = True
 
-    def next_page(self, url):
-        while self.page_generator[url] < self.page:
-            self.page_generator[url] += 1
-            yield url + '{}/'.format(self.page_generator[url])
+    def __init__(self):
+        Channel.__init__(self)
+        self.funcmap = {
+            self.parse_page: self.generator(
+                'https://www.kuaidaili.com/free/intr/')+self.generator('https://www.kuaidaili.com/free/inha/')
+        }
+
+    def generator(self, url):
+        loop = self.get_loop()
+        rst = loop.run_until_complete(self.page_generator(url))
+        return rst
+
+    async def page_generator(self, url):
+        rst, i = [], 0
+        while i < self.PAGE:
+            i += 1
+            rst.append(url + '{}/'.format(i))
+        return rst
 
     async def parse_page(self, session, url):
         text = await self.get(session, url)
@@ -24,16 +36,4 @@ class Kuai(Channel):
             port = proxy >> extra_xpath(
                 "./td[position()=2]/text()") >> safe_extra
             rst.append((host, port))
-        return rst
-
-    async def batch(self):
-        rst = []
-        async with aiohttp.ClientSession() as session:
-            if not self.start_urls:
-                self.start_urls = await self.generate_start_urls(session)
-            for url in self.start_urls:
-                for page in self.next_page(url):
-                    rst.append(await asyncio.ensure_future(
-                        self.parse_page(session, page)))
-                    await asyncio.sleep(1)
         return rst

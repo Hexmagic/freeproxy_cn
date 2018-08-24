@@ -1,12 +1,25 @@
-from aiohttp import web
-from freeproxy.util.tools import getRedis
-from freeproxy.config import PROXY_KEY, SERVER_PORT
-redis = getRedis()
 import json
 
+from aiohttp import web
 
-async def get_proxy(request):
-    one = await redis.srandmember(PROXY_KEY, 1)
+from freeproxy.config import SERVER_PORT
+from freeproxy.util.tools import getRedis
+
+redis = getRedis()
+
+
+async def get_http_proxy(request):
+    one = await redis.srandmember('http_proxy', 1)
+    if one:
+        try:
+            proxy = json.loads(one[0])
+        except Exception:
+            proxy = eval(one[0])
+    return web.json_response(proxy)
+
+
+async def get_https_proxy(request):
+    one = await redis.srandmember('https_proxy', 1)
     if one:
         try:
             proxy = json.loads(one[0])
@@ -21,6 +34,7 @@ class Application(web.Application):
 
 
 app = Application()
-app.router.add_get('/get', get_proxy)
+app.router.add_get('/get_http_proxy', get_http_proxy)
+app.router.add_get('/get_https_proxy', get_https_proxy)
 web.run_app(app, host='127.0.0.1', port=SERVER_PORT)
 print("app run on http://127.0.0.1:{}".format(SERVER_PORT))

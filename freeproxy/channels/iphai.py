@@ -2,4 +2,8 @@ from freeproxy.channels import Channel
 
 
 class IPHai(Channel):
-    start_urls = ['http://www.iphai.com/free/ng']
+    def __init__(self):
+        Channel.__init__(self)
+        self.funcmap = {
+            self.parse_page: ['http://www.iphai.com/free/ng']
+        }

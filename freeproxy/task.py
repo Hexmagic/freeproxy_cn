@@ -3,7 +3,7 @@ import itertools
 from concurrent.futures import ThreadPoolExecutor
 
 from freeproxy.channels import CHANS, Channel
-from freeproxy.config import PROXY_KEY, REFRESH_DELAY, SITE_NUM
+from freeproxy.config import REFRESH_DELAY, SITE_NUM
 from freeproxy.util.proxy import Proxy
 from freeproxy.util.tools import getRedis
 
@@ -26,7 +26,17 @@ async def grab_and_store(channel):
     rst = list(map(lambda x: x.proxy, rst))
     if not rst:
         return
-    await client.sadd(PROXY_KEY, *rst)
+    await client.sadd('https_proxy', *rst)
+    for inner in unique:
+        if not inner[0]:
+            continue
+        tasks.append(Proxy(*inner).test_httpbin())
+    rst = await asyncio.gather(*tasks)
+    rst = list(filter(lambda x: x.elapsed != float('inf'), rst))
+    rst = list(map(lambda x: x.proxy, rst))
+    if not rst:
+        return
+    await client.sadd('http_proxy', *rst)
     print("channel {} test passed ".format(channel))
 
 

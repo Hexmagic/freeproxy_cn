@@ -1,15 +1,20 @@
 from freeproxy.channels import Channel
-from freeproxy.util.pipe import to_str, to_doc, extra_xpath, safe_extra
+from freeproxy.util.pipe import to_doc, extra_xpath, safe_extra
 
 
 class XiCi(Channel):
-    start_urls = ['http://www.xicidaili.com/wn/',
-                  'http://www.xicidaili.com/wt/']
+    def __init__(self):
+        Channel.__init__(self)
+        self.funcmap = {
+            self.parse_page: list(self.generate(
+                'http://www.xicidaili.com/wn/'))+list(self.generate('http://www.xicidaili.com/wt/'))
+        }
 
-    def next_page(self, url):
-        while self.page_generator[url] < self.page:
-            self.page_generator[url] += 1
-            yield url + (self.page_generator[url] >> to_str)
+    def generate(self, url):
+        i = 0
+        while i < self.PAGE:
+            i += 1
+            yield url + str(i)
 
     async def parse_page(self, session, url):
         proxys = await self.get(session, url) >> to_doc >> extra_xpath(
