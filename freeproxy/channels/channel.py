@@ -54,11 +54,11 @@ class Channel(object):
         binary: return binary obj or yes
         '''
         headers = headers or self.headers
-        headers['Host'] = url >> extra_host
         proxy = getattr(self, 'proxy', proxy) or await self.fetch_proxy() if self.RANDOM_PROXY else None
         try:
             if proxy and self.RANDOM_PROXY:
                 self.URL_PROXY_MAP[url] = proxy
+            headers['Host'] = url >> extra_host
             async with session.get(url, proxy=proxy, headers=headers, ssl=False) as res:
                 if binary:
                     content = await res.read()
