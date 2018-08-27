@@ -8,7 +8,7 @@ class ThreeOneF(Channel):
     def __init__(self):
         Channel.__init__(self)
 
-    async def prpare(self, session):
+    async def prepare(self, session):
         doc = await self.get(session, 'https://31f.cn/') >> to_doc
         hrefs = doc.xpath('//table[position()=2]//a/@href')
         hrefs = ['https://31f.cn' + ele for ele in hrefs]

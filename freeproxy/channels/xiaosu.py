@@ -10,7 +10,7 @@ class XiaoSu(Channel):
     def __init__(self):
         Channel.__init__(self)
 
-    async def prpare(self, session):
+    async def prepare(self, session):
         urls = await self.get(session, "http://www.xsdaili.com/") >> to_doc >> extra_xpath('//div[@class="panel-body"]//div[@class="title"]/a/@href')
         self.funcmap = {
             self.parse_page: ['http://www.xsdaili.com' + ele for ele in urls]

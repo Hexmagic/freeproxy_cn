@@ -54,7 +54,7 @@ class Channel(object):
         binary: return binary obj or yes
         '''
         headers = headers or self.headers
-        proxy = getattr(self, 'proxy', proxy) or await self.fetch_proxy() if self.RANDOM_PROXY else None
+        proxy = getattr(self, 'proxy', proxy) or (await self.fetch_proxy() if self.RANDOM_PROXY else None)
         try:
             if proxy and self.RANDOM_PROXY:
                 self.URL_PROXY_MAP[url] = proxy
@@ -116,7 +116,7 @@ class Channel(object):
             text = await res.text()
             return text
 
-    async def prpare(self, session):
+    async def prepare(self, session):
         '''
         do some thing before crawl , see xiaosu.py
         '''
@@ -124,7 +124,7 @@ class Channel(object):
 
     async def run(self):
         async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=100, limit_per_host=self.LIMIT)) as session:
-            await self.prpare(session)
+            await self.prepare(session)
             tasks = []
             if self.SYNC:
                 rst = []
