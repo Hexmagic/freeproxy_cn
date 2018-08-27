@@ -1,5 +1,5 @@
 from freeproxy.channels import Channel
-from freeproxy.util.pipe import to_doc, extra_xpath, safe_extra
+from freeproxy.util.pipe import to_doc, extra_xpath, extra_head
 
 
 class IPJiang(Channel):
@@ -26,8 +26,8 @@ class IPJiang(Channel):
         rst = []
         for proxy in proxys:
             host = proxy >> extra_xpath(
-                "./td[position()=2]//text()") >> safe_extra
+                "./td[position()=2]//text()") >> extra_head
             port = proxy >> extra_xpath(
-                "./td[position()=3]//text()") >> safe_extra
+                "./td[position()=3]//text()") >> extra_head
             rst.append((host, port))
         return rst

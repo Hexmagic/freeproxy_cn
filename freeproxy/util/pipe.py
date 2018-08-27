@@ -41,7 +41,7 @@ def to_int(string):
 
 
 @pipe
-def safe_extra(param):
+def extra_head(param):
     param = param or ''
     if isinstance(param, list):
         if param:

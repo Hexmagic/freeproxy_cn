@@ -1,7 +1,7 @@
 import aiohttp
 
 from freeproxy.channels import Channel
-from freeproxy.util.pipe import extra_xpath, safe_extra, to_doc
+from freeproxy.util.pipe import extra_xpath, extra_head, to_doc
 
 
 class ThreeOneF(Channel):
@@ -21,8 +21,8 @@ class ThreeOneF(Channel):
         rst = []
         for proxy in proxys:
             host = proxy >> extra_xpath(
-                './td[position()=2]/text()') >> safe_extra
+                './td[position()=2]/text()') >> extra_head
             port = proxy >> extra_xpath(
-                './td[position()=3]/text()') >> safe_extra
+                './td[position()=3]/text()') >> extra_head
             rst.append((host, port))
         return rst

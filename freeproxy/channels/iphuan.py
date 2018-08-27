@@ -1,5 +1,5 @@
 from freeproxy.channels import Channel
-from freeproxy.util.pipe import to_doc, extra_xpath, safe_extra
+from freeproxy.util.pipe import to_doc, extra_xpath, extra_head
 import re
 
 
@@ -37,7 +37,7 @@ class IPhuan(Channel):
         rst = []
         for proxy in proxys:
             try:
-                host, port = (proxy >> safe_extra).split(':')
+                host, port = (proxy >> extra_head).split(':')
             except Exception:
                 continue
             rst.append((host, port))
