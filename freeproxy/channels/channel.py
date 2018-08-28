@@ -24,7 +24,7 @@ class Channel(object):
     funcmap = defaultdict(list)
     PAGE = 5  # max page crawl
     LIMIT = 10
-    URL_PROXY_MAP = {}
+    URL_PROXY_MAP = defaultdict(str)
     LOOP_DELAY = 60 * 10
     TIMEOUT = 20
     REQUEST_DELAY = 0
@@ -90,6 +90,8 @@ class Channel(object):
 
     async def report_proxy(self, session, url):
         proxy = self.URL_PROXY_MAP[url]
+        if not proxy:
+            return None
         logger.warning("proxy {} banned ".format(proxy))
         await self.rdm.srem(PROXY_KEY, proxy)
         proxy = await self.fetch_proxy()
@@ -128,7 +130,6 @@ class Channel(object):
             tasks = []
             if self.SYNC:
                 rst = []
-                logger.info("request performed sync")
                 for func, urls in self.funcmap.items():
                     for url in urls:
                         ele = await asyncio.gather(asyncio.ensure_future(func(session, url)))
