@@ -4,7 +4,6 @@ import re
 
 
 class IPhuan(Channel):
-    RANDOM_PROXY = True
 
     def __init__(self):
         super(IPhuan, self).__init__()

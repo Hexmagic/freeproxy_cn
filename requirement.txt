@@ -2,3 +2,4 @@ lxml
 aiohttp
 logzero
 aredis
+fake_useragent

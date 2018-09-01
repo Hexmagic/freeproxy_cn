@@ -7,7 +7,6 @@ from fake_useragent import UserAgent
 from freeproxy.util.db import getRedis
 from freeproxy.util.log import get_trace, logger
 from freeproxy.util.pipe import extra_host, extra_xpath, extra_head, to_doc
-from information.conf import DEBUG_PROXY, DEBUG_SYMBOL, PROXY_KEY
 
 
 class Channel(object):
@@ -35,7 +34,6 @@ class Channel(object):
     def __init__(self):
         self.rdm = getRedis()
         self.headers = self.random_headers()
-        self.proxy = DEBUG_PROXY if DEBUG_SYMBOL else None
 
     def random_headers(self):
         return {'User-Agent': UserAgent().random}
@@ -54,7 +52,6 @@ class Channel(object):
         binary: return binary obj or yes
         '''
         headers = headers or self.headers
-        proxy = getattr(self, 'proxy', proxy) or (await self.fetch_proxy() if self.RANDOM_PROXY else None)
         try:
             if proxy and self.RANDOM_PROXY:
                 self.URL_PROXY_MAP[url] = proxy
@@ -65,44 +62,9 @@ class Channel(object):
                 else:
                     content = await res.text()
                 return res if raw else content
-        except aiohttp.ClientProxyConnectionError:
-            logger.warning("proxy {} connnect error".format(proxy))
-            return await self.report_proxy(session, url)
-        except aiohttp.ClientHttpProxyError:
-            logger.warning("proxy {} connnect error".format(proxy))
-            return await self.report_proxy(session, url)
-        except aiohttp.ServerDisconnectedError as e:
-            if not e.message:
-                logger.warning("get empty error with not msg {}".format(e))
-                return await self.report_proxy(session, url)
-            if e.message.code == 429:
-                logger.warning(
-                    "proxy {} too mmany  connnect errot".format(proxy))
-                return await self.report_proxy(session, url)
-        except aiohttp.client_exceptions.ClientOSError:
-            logger.warning(
-                "connection {} closed by remote host ".format(proxy))
-            await asyncio.sleep(self.REQUEST_DELAY)
-            return await self.report_proxy(session, url)
         except Exception:
             logger.error(get_trace())
         return ''
-
-    async def report_proxy(self, session, url):
-        proxy = self.URL_PROXY_MAP[url]
-        if not proxy:
-            return None
-        logger.warning("proxy {} banned ".format(proxy))
-        await self.rdm.srem(PROXY_KEY, proxy)
-        proxy = await self.fetch_proxy()
-        return await self.get(session, url, proxy=proxy)
-
-    async def fetch_proxy(self):
-        rst = await self.rds.srandmember(PROXY_KEY, 1)
-        if not rst:
-            return None
-        else:
-            return rst[0].decode('utf8')
 
     async def post(self, session, url, data=None, headers=None, json=None):
         '''

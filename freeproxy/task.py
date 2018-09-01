@@ -29,7 +29,8 @@ class Task(object):
                 for ele in inner:
                     if not ele[0]:
                         continue
-                    tasks.append(asyncio.ensure_future(Proxy(*ele).test_baidu()))
+                    tasks.append(asyncio.ensure_future(
+                        Proxy(*ele).test_baidu()))
         rst = await asyncio.gather(*tasks)
         rst = list(filter(lambda x: x.elapsed != float('inf'), rst))
         rst = list(map(lambda x: x.proxy, rst))
@@ -42,12 +43,14 @@ class Task(object):
         tasks = []
         for inner in proxies:
             if isinstance(inner, tuple):
-                tasks.append(asyncio.ensure_future(Proxy(*inner).test_httpbin()))
+                tasks.append(asyncio.ensure_future(
+                    Proxy(*inner).test_httpbin()))
             else:
                 for ele in inner:
                     if not ele[0]:
                         continue
-                    tasks.append(asyncio.ensure_future(Proxy(*ele).test_httpbin()))
+                    tasks.append(asyncio.ensure_future(
+                        Proxy(*ele).test_httpbin()))
         rst = await asyncio.gather(*tasks)
         rst = list(filter(lambda x: x.elapsed != float('inf'), rst))
         rst = list(map(lambda x: x.proxy, rst))
@@ -73,7 +76,7 @@ class Task(object):
         def inner():
             asyncio.gather(self.run_())
             loop = asyncio.get_event_loop()
-            loop.call_later(60*10,inner)
+            loop.call_later(60*10, inner)
         inner()
 
 
@@ -82,6 +85,7 @@ def main():
     coro = Task().run()
     asyncio.gather(asyncio.ensure_future(coro))
     loop.run_forever()
+
 
 if __name__ == '__main__':
     main()
