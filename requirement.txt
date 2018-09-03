@@ -3,3 +3,4 @@ aiohttp
 logzero
 aredis
 fake_useragent
+python-dateutil
