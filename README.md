@@ -5,17 +5,14 @@ Python3 Free chinese http/https proxy 🚩
 
 ```
 git clone https://github.com/Hexmagic/freeproxy.git
-```
-change dir to freeproxy locate,then do
-
-```
-pip install -r requirement.txt
+cd freeproxy
+pip3 install -r requirement.txt
 ```
 
 # Usage
 
 ```
-python freeproxy/task.py
+python3 -m freeproxy.task
 ```
 
 get proxy example code
