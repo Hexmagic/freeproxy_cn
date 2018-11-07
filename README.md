@@ -12,7 +12,7 @@ pip3 install -r requirement.txt
 # Usage
 
 ```
-python3 -m freeproxy.task
+python3 task
 ```
 
 get proxy example code
