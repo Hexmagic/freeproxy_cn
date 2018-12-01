@@ -2,10 +2,8 @@ import time
 
 import aiohttp
 import aredis
-from fake_useragent import UserAgent
+from dummy_useragent import UserAgent
 from logzero import logger
-
-
 
 
 class TestRst(dict):
@@ -37,12 +35,15 @@ class Proxy(dict):
 
     async def test_url(self, url):
         async with aiohttp.ClientSession() as session:
-            header = {
-                'User-Agent': UserAgent().random
-            }
+            header = {'User-Agent': UserAgent().random()}
             try:
                 start = time.time()
-                async with session.get(url, headers=header, proxy=self.proxy_url, timeout=30, ssl=False) as res:
+                async with session.get(
+                        url,
+                        headers=header,
+                        proxy=self.proxy_url,
+                        timeout=30,
+                        ssl=False) as res:
                     await res.text()
                     elpased = time.time() - start
                     logger.info("proxy {} elpased {}".format(

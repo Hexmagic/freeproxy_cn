@@ -1,5 +1,5 @@
 import unittest
-from freeproxy.channels import ThreeOneF, Crossin, Eight9, IPHai, Ip3366, IPJiang, Kuai, XiaoSu, XiCi, SeoFang, SixSix, IPhuan
+from freeproxy.core.channel import ThreeOneF, Crossin, Eight9, IPHai, Ip3366, IPJiang, Kuai, XiaoSu, XiCi, SeoFang, SixSix, IPhuan
 import asyncio
 
 

@@ -1,6 +1,6 @@
 import asyncio
 import itertools
-from freeproxy.channels import CHANS, Channel
+from freeproxy.core.channel import CHANS, Channel
 from freeproxy.config import REFRESH_DELAY
 from freeproxy.util.tools import Proxy
 from freeproxy.util.log import logger
@@ -81,7 +81,8 @@ class Task(object):
 
 
 def main():
-    loop = asyncio.get_event_loop()
+    loop = asyncio.ProactorEventLoop()
+    asyncio.set_event_loop(loop)
     coro = Task().run()
     asyncio.gather(asyncio.ensure_future(coro))
     loop.run_forever()

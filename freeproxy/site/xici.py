@@ -1,4 +1,4 @@
-from freeproxy.channels import Channel
+from freeproxy.core.channel import Channel
 from freeproxy.util.pipe import to_doc, extra_xpath, extra_head
 
 

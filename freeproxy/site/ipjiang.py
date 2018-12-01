@@ -1,24 +1,23 @@
-from freeproxy.channels import Channel
-from freeproxy.util.pipe import extra_xpath, extra_head, to_doc
+from freeproxy.core.channel import Channel
+from freeproxy.util.pipe import to_doc, extra_xpath, extra_head
 
 
-class Kuai(Channel):
-    LIMIT = 1
-    REQUEST_DELAY = 2
-    SYNC = True
+class IPJiang(Channel):
+    PAGE = 28
 
     def __init__(self):
         Channel.__init__(self)
         self.funcmap = {
             self.parse_page: self.generator(
-                'https://www.kuaidaili.com/free/intr/')+self.generator('https://www.kuaidaili.com/free/inha/')
+                'http://ip.jiangxianli.com/?page={}')
         }
 
     def generator(self, url):
-        rst, i = [], 0
+        i = 0
+        rst = []
         while i < self.PAGE:
             i += 1
-            rst.append(url + '{}/'.format(i))
+            rst.append(url.format(i))
         return rst
 
     async def parse_page(self, session, url):
@@ -27,8 +26,8 @@ class Kuai(Channel):
         rst = []
         for proxy in proxys:
             host = proxy >> extra_xpath(
-                "./td[position()=1]/text()") >> extra_head
+                "./td[position()=2]//text()") >> extra_head
             port = proxy >> extra_xpath(
-                "./td[position()=2]/text()") >> extra_head
+                "./td[position()=3]//text()") >> extra_head
             rst.append((host, port))
         return rst

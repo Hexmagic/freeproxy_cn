@@ -12,6 +12,7 @@ from .xiaosu import XiaoSu
 from .xici import XiCi
 from .iphuan import IPhuan
 
-CHANS = [
-    Crossin, Eight9, Ip3366, IPHai, IPJiang, Kuai, SeoFang, SixSix, ThreeOneF, XiaoSu, XiCi, IPhuan
+SITES = [
+    Crossin, Eight9, Ip3366, IPHai, IPJiang, Kuai, SeoFang, SixSix, ThreeOneF,
+    XiaoSu, XiCi, IPhuan
 ]

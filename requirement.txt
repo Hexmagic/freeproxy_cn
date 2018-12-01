@@ -2,5 +2,5 @@ lxml
 aiohttp
 logzero
 aredis
-fake_useragent
+dummy_useragent
 python-dateutil

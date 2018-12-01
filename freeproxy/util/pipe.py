@@ -41,16 +41,9 @@ def to_int(string):
 
 
 @pipe
-def extra_head(param):
-    param = param or ''
-    if isinstance(param, list):
-        if param:
-            return param[0].strip('" \r\t\n')
-        else:
-            return ''.join(param).strip('" \r\n\t')
-    elif isinstance(param, str):
-        return param.strip('" \r\n\t')
-    return ''
+def extra_head(doc, path=''):
+    item = doc.xpath(path)
+    return ''.join(item).strip('" \r\n\t')
 
 
 @pipe
@@ -65,7 +58,7 @@ def check(create_time):
     tody = datetime.now().date().isoformat()
     tody_timestamp = datetime.fromisoformat(tody).timestamp()
     if len(str(int(create_time))) == 13:
-        if create_time >= tody_timestamp*1000:
+        if create_time >= tody_timestamp * 1000:
             return True
         return False
     else:
@@ -90,24 +83,24 @@ def date_to_timestamp(date_str):
     date_str = '-'.join(date_str)
     # linksfin 格式为’ 2018-8-09 12:12:12
     date_str = date_str.strip()
-    return int(datetime.fromisoformat(date_str.replace("T", " ").replace('Z', '').strip().split(".")[0].split('+')[0]).timestamp()*1000)
+    return int(
+        datetime.fromisoformat(
+            date_str.replace("T", " ").replace(
+                'Z', '').strip().split(".")[0].split('+')[0]).timestamp() *
+        1000)
 
 
 @pipe
 def timestamp_to_date(stamp):
-    return str(datetime.fromtimestamp(stamp/1000))
+    return str(datetime.fromtimestamp(stamp / 1000))
 
 
 @pipe
 def get13timestamp(none):
-    return int(time.time()*1000)
+    return int(time.time() * 1000)
 
 
 @pipe
 def gmt_to_timestamp(gmt):
-    return int((dateutil.parser.parse(gmt) + timedelta(hours=8)).timestamp()*1000)
-
-
-@pipe
-def extra_xpath(doc, xpath=None):
-    return doc.xpath(xpath)
+    return int(
+        (dateutil.parser.parse(gmt) + timedelta(hours=8)).timestamp() * 1000)

@@ -1,4 +1,4 @@
-from freeproxy.channels import Channel
+from freeproxy.core.channel import Channel
 
 
 class SeoFang(Channel):

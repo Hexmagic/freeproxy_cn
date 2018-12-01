@@ -1,4 +1,4 @@
-from freeproxy.channels import Channel
+from freeproxy.core.channel import Channel
 
 
 class Ip3366(Channel):
@@ -7,9 +7,7 @@ class Ip3366(Channel):
 
     def __init__(self):
         Channel.__init__(self)
-        self.funcmap = {
-            self.parse_page: self.generator()
-        }
+        self.funcmap = {self.parse_page: self.generator()}
 
     def generator(self):
         rst, i = [], 0

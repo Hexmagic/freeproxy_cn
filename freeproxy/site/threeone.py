@@ -1,6 +1,6 @@
 import aiohttp
 
-from freeproxy.channels import Channel
+from freeproxy.core.channel import Channel
 from freeproxy.util.pipe import extra_xpath, extra_head, to_doc
 
 
