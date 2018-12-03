@@ -1,6 +1,6 @@
 import asyncio
 from functools import wraps
-
+from dummy_useragent import UserAgent
 import aiohttp
 from aiohttp.client_exceptions import (
     ClientProxyConnectionError,
@@ -9,10 +9,9 @@ from aiohttp.client_exceptions import (
     ServerTimeoutError,
     WSServerHandshakeError,
 )
-from juice.util.log import get_trace, logger
-from juice.util.pipe import extra_host
-from juice.util.smtp import send_mail
-from juice.conf import PROXY_URL
+from logzero import logger
+from freeproxy.util.pipe import extra_host
+from freeproxy.config import PROXY_URL
 
 
 class Empty(Exception):
@@ -52,7 +51,7 @@ def wrap_http(func):
             except asyncio.TimeoutError:
                 logger.error("timeout error")
                 await asyncio.sleep(2)
-            except aiohttp.client_exceptions.ClientOSError:
+            except aiohttp.client_exceptions.ClientOSError as e:
                 logger.error("Connection reset by peer")
                 raise e
             except Exception as e:
@@ -63,15 +62,10 @@ def wrap_http(func):
 
 
 class Http(object):
-    def __init__(self, session=None, timeout=30, max_concurrent_per_host=3000):
-        self.headers = {
-            "User-Agent":
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
-        }
+    def __init__(self, session=None, timeout=30):
+        self.headers = {"User-Agent": UserAgent().random()}
         self.timeout = timeout
         self.session = session
-        self.max_concurrent_per_host = max_concurrent_per_host
-        self.last_proxy = None
         self.proxy = PROXY_URL
 
     @wrap_http
@@ -96,13 +90,18 @@ class Http(object):
         raw: return res obj
         binary: return binary content ,default is False return text content
         """
-        headers = headers
+        self.headers.update(headers)
+        headers = self.headers
         headers["Host"] = url >> extra_host
+        headers['User-Agent'] = UserAgent().random()
         session = session or self.session
+        if session.closed:
+            session = aiohttp.ClientSession()
+        proxy = proxy or self.proxy
         async with session.get(
                 url,
                 headers=headers,
-                proxy=self.proxy,
+                proxy=proxy,
                 timeout=timeout,
                 params=params,
                 ssl=False,
@@ -141,15 +140,20 @@ class Http(object):
         data: post dict or text
         json: dict
         """
-        headers = headers
+        self.headers.update(headers)
+        headers = self.headers
         session = session or self.session
+        if session.closed:
+            session = aiohttp.ClientSession()
         headers["Host"] = url >> extra_host
+        headers['User-Agent'] = UserAgent().random()
+        proxy = proxy or self.proxy
         async with session.post(
                 url,
                 headers=headers,
                 data=data,
                 json=json,
-                proxy=self.proxy,
+                proxy=proxy,
                 timeout=timeout,
                 ssl=False,
         ) as res:

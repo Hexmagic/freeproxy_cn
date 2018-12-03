@@ -1,23 +1,23 @@
 from freeproxy.core.channel import Channel
-from freeproxy.util.pipe import to_doc, extra_xpath
+from freeproxy.util.pipe import to_doc
 
 
 class Eight9(Channel):
-    PAGE = 3
-
     def __init__(self):
         Channel.__init__(self)
+        self.name = 'eight9'
         self.funcmap = {
-            self.parse_page: [
+            self.handle: [
                 'http://www.89ip.cn/tqdl.html?api=1&num=1000&port=&address=&isp='
             ]
         }
 
-    async def parse_page(self, session, url):
-        proxies = await self.get(session,
-                                 url) >> to_doc >> extra_xpath("//text()")
-        rst = []
-        for proxy in proxies[7:-1]:
-            [host, port] = proxy.strip('\n\t\r ').split(':')
-            rst.append((host, port))
-        return rst
+    async def handle(self, url):
+        content = await self.http.get(url)
+        doc = content >> to_doc
+        items = doc.xpath('//body/text()')
+        proxies = []
+        for item in items[7:-1]:
+            [host, port] = item.strip('\n\t\r ').split(':')
+            proxies.append([host, port])
+        await self.store_proxies(proxies)

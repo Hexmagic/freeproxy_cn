@@ -1,25 +1,31 @@
-import aiohttp
-
 from freeproxy.core.channel import Channel
-from freeproxy.util.pipe import extra_xpath, to_doc
+from freeproxy.util.pipe import to_doc
 
 
 class XiaoSu(Channel):
-    start_urls = None
-
     def __init__(self):
-        Channel.__init__(self)
+        super(XiaoSu, self).__init__()
+        self.name = 'xiaosu'
 
-    async def prepare(self, session):
-        urls = await self.get(session, "http://www.xsdaili.com/") >> to_doc >> extra_xpath('//div[@class="panel-body"]//div[@class="title"]/a/@href')
+    async def boostrap(self):
+        content = await self.http.get("http://www.xsdaili.com/")
+        doc = content >> to_doc
+        suffixs = doc.xpath(
+            '//div[@class="panel-body"]//div[@class="title"]/a/@href')[0:2]
         self.funcmap = {
-            self.parse_page: ['http://www.xsdaili.com' + ele for ele in urls]
+            self.handle: [
+                'http://www.xsdaili.com' + ele for ele in suffixs]
         }
 
-    async def parse_page(self, session, url):
-        proxys = await self.get(session, url) >> to_doc >> extra_xpath('//div[@class="cont"]/text()')
-        rst = []
-        for proxy in proxys:
-            proxy = proxy.strip().split('@')[0]
-            rst.append(tuple(proxy.split(":")))
-        return rst
+    async def handle(self,  url):
+        content = await self.http.get(url)
+        doc = content >> to_doc
+        items = doc.xpath('//div[@class="cont"]/text()')
+        proxies = []
+        for item in items:
+            item = item.strip('\r\n\t')
+            if not item:
+                continue
+            [host, port] = item.strip().split('@')[0].split(':')
+            proxies.append([host, port])
+        await self.store_proxies(proxies)

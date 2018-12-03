@@ -11,10 +11,18 @@ import urllib.parse
 class pipe(object):
     def __init__(self, function):
         self.function = function
+        self.rst = None
         functools.update_wrapper(self, function)
 
     def __rrshift__(self, other):
         return self.function(other)
+
+    def __le__(self, other):
+        if isinstance(other, pipe):
+            self.rst = list(map(self.function, other.rst))
+        else:
+            self.rst = list(map(self.function, other))
+        return self.rst
 
     def __call__(self, *args, **kwargs):
         return pipe(lambda x: self.function(x, *args, **kwargs))
@@ -43,7 +51,9 @@ def to_int(string):
 @pipe
 def extra_head(doc, path=''):
     item = doc.xpath(path)
-    return ''.join(item).strip('" \r\n\t')
+    if not item:
+        return ''
+    return item[0].strip('" \r\n\t')
 
 
 @pipe

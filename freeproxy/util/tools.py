@@ -1,7 +1,6 @@
 import time
 
 import aiohttp
-import aredis
 from dummy_useragent import UserAgent
 from logzero import logger
 
