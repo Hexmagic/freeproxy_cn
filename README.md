@@ -4,29 +4,14 @@ Python3 免费的中国 http/https proxy 🚩
 # Install
 
 ```
-git clone https://github.com/Hexmagic/freeproxy_cn.git
-cd freeproxy_cn
-pip3 install -r requirement.txt
+pip install freeproxy_cn
 ```
 
 # Usage
 
+获取免费代理，代理默认存在redis的db 0的`http`和`https`里，类型是list
 ```
-python3 task
+from freeproxy_cn import Engin
+import asyncio
+asyncio.run(Enging().run())
 ```
-
-get proxy example code
-
-```
->>>import redis
->>>r = redis.Redis()
->>>proxy = r.srandmember('http_proxy',1)
->>>proxy
-b'http:127.0.0.1:8080'
-```
-
-
-
-
-
-

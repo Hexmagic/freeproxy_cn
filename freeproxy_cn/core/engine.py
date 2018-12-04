@@ -61,6 +61,6 @@ class Engin(object):
 
     async def run(self):
         while True:
+            logger.debug("开始新一轮的抓取")
             await self._run()
             await asyncio.sleep(60 * 10)
-            logger.debug("开始新一轮的抓取")
