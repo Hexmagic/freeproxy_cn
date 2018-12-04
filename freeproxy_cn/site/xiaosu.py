@@ -1,5 +1,5 @@
-from freeproxy.core.channel import Channel
-from freeproxy.util.pipe import to_doc
+from freeproxy_cn.core.channel import Channel
+from freeproxy_cn.util.pipe import to_doc
 
 
 class XiaoSu(Channel):
@@ -28,4 +28,4 @@ class XiaoSu(Channel):
                 continue
             [host, port] = item.strip().split('@')[0].split(':')
             proxies.append([host, port])
-        await self.store_proxies(proxies)
+        await self.valid_ip(proxies)

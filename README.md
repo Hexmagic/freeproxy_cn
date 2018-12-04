@@ -1,11 +1,11 @@
-Python3 免费的中国 http/https proxy 🚩 
+Python3 免费的中国 http/https proxy 🚩
 
 
 # Install
 
 ```
-git clone https://github.com/Hexmagic/freeproxy.git
-cd freeproxy
+git clone https://github.com/Hexmagic/freeproxy_cn.git
+cd freeproxy_cn
 pip3 install -r requirement.txt
 ```
 

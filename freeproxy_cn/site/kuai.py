@@ -1,4 +1,4 @@
-from freeproxy.core.channel import Channel
+from freeproxy_cn.core.channel import Channel
 
 
 class Kuai(Channel):

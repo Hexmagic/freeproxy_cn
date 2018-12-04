@@ -1,5 +1,5 @@
-from freeproxy.core.channel import Channel
-from freeproxy.util.pipe import to_doc
+from freeproxy_cn.core.channel import Channel
+from freeproxy_cn.util.pipe import to_doc
 
 
 class ThreeOneF(Channel):

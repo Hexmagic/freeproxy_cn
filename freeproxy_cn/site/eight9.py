@@ -1,5 +1,5 @@
-from freeproxy.core.channel import Channel
-from freeproxy.util.pipe import to_doc
+from freeproxy_cn.core.channel import Channel
+from freeproxy_cn.util.pipe import to_doc
 
 
 class Eight9(Channel):
@@ -20,4 +20,4 @@ class Eight9(Channel):
         for item in items[7:-1]:
             [host, port] = item.strip('\n\t\r ').split(':')
             proxies.append([host, port])
-        await self.store_proxies(proxies)
+        await self.valid_ip(proxies)

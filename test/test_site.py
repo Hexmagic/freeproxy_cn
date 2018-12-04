@@ -1,17 +1,16 @@
 import unittest
-from freeproxy.site.crossin import Crossin
-from freeproxy.site.eight9 import Eight9
-from freeproxy.site.ip3366 import Ip3366
-from freeproxy.site.iphai import IPHai
-from freeproxy.site.ipjiang import IPJiang
-from freeproxy.site.kuai import Kuai
-from freeproxy.site.seofang import SeoFang
-from freeproxy.site.threeone import ThreeOneF
-from freeproxy.site.xiaosu import XiaoSu
-from freeproxy.site.xici import XiCi
-from freeproxy.site.zdaye import Zdaye
+from freeproxy_cn.site.crossin import Crossin
+from freeproxy_cn.site.eight9 import Eight9
+from freeproxy_cn.site.ip3366 import Ip3366
+from freeproxy_cn.site.iphai import IPHai
+from freeproxy_cn.site.ipjiang import IPJiang
+from freeproxy_cn.site.kuai import Kuai
+from freeproxy_cn.site.seofang import SeoFang
+from freeproxy_cn.site.threeone import ThreeOneF
+from freeproxy_cn.site.xiaosu import XiaoSu
+from freeproxy_cn.site.xici import XiCi
 import asyncio
-from freeproxy.core.engine import Engin
+from freeproxy_cn.core.engine import Engin
 
 
 class TestChannel(unittest.TestCase):
@@ -66,11 +65,6 @@ class TestChannel(unittest.TestCase):
     def test_xici(self):
         eng = Engin()
         eng.set_site(XiCi)
-        self.loop.run_until_complete(eng.run())
-
-    def test_zdaye(self):
-        eng = Engin()
-        eng.set_site(Zdaye)
         self.loop.run_until_complete(eng.run())
 
 
