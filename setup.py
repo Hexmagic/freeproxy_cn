@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='freeproxy_cn',
-    version='0.1',
+    version='0.2',
     description='抓取免费的中国代理',
     long_description='',
     author='Hexmagic',
