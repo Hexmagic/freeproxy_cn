@@ -40,7 +40,7 @@ class Channel(object):
                 try:
                     self.bucket.insert(p)
                 except Exception:
-                    self.bucket = CuckooFilter()
+                    self.bucket = CuckooFilter(capacity=100000)
                 new_proxies.append(p)
         if new_proxies:
             await self.rdm.lpush('http', *new_proxies)
@@ -56,7 +56,7 @@ class Channel(object):
                 try:
                     self.bucket.insert(p)
                 except Exception:
-                    self.bucket = CuckooFilter()
+                    self.bucket = CuckooFilter(capacity=100000)
                 new_proxies.append(p)
         if new_proxies:
             await self.rdm.lpush('https', *new_proxies)
@@ -72,21 +72,23 @@ class Channel(object):
                 try:
                     self.bucket.insert(p)
                 except Exception:
-                    self.bucket = CuckooFilter()
+                    self.bucket = CuckooFilter(capacity=100000)
                 new_proxies.append(p)
         if new_proxies:
             await self.rdm.lpush('http', *new_proxies)
 
     async def valid_google(self, proxies):
-        logger.info("{} start valid {} proxies".format(
-            self.name, len(proxies)))
         if not proxies:
             return
+        logger.info("{} start valid {} proxies".format(
+            self.name, len(proxies)))
         valid_google = await self.valid_url('https://www.google.com', proxies)
         if valid_google:
             await self.store_google(valid_google)
 
     async def valid_ip(self, proxies):
+        if not proxies:
+            return
         logger.info("{} start valid {} proxies".format(
             self.name, len(proxies)))
         valid_http = await self.valid_url('http://www.httpbin.org/', proxies)

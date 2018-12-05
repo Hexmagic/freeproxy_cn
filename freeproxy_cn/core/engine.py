@@ -8,26 +8,31 @@ import aredis
 
 
 class Engin(object):
-    def __init__(self, proxy_url=None, grab_hk=False, redis_host='127.0.0.1', redis_port=6379, redis_password='', redis_db=0):
-        '''
+    def __init__(
+        self,
+        proxy_url=None,
+        grab_hk=False,
+        redis_host="127.0.0.1",
+        redis_port=6379,
+        redis_password="",
+        redis_db=0,
+    ):
+        """
         proxy_url : 如要抓取香港代理需要设置代理
         grab_hk : 是否抓取香港代理，默认为false
-        '''
-        self.name = 'engin'
+        """
+        self.name = "engin"
         self.rdm = aredis.StrictRedis(
-            host=redis_host,
-            port=redis_port,
-            password=redis_password,
-            db=redis_db
+            host=redis_host, port=redis_port, password=redis_password, db=redis_db
         )
         self.grab_hk = grab_hk
         self.proxy_url = proxy_url
         self.sites = self.load_default_sites()
 
     def load_default_sites(self):
-        '''
+        """
         加载默认抓取的代理网站
-        '''
+        """
         sites = []
         for clas in CHAN1:
             sites.append(clas())
@@ -63,4 +68,4 @@ class Engin(object):
         while True:
             logger.debug("开始新一轮的抓取")
             await self._run()
-            await asyncio.sleep(60 * 10)
+            await asyncio.sleep(60 * 20)
