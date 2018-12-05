@@ -39,6 +39,7 @@ Install
 ############
 
 .. code-block::
+
     $ pip install freeproxy_cn
 
 
@@ -46,6 +47,7 @@ Usage
 ############
 
 .. code-block:: python
+
     >>> from freeproxy_cn import Engin
     >>> import asyncio
     >>> loop = asyncio.get_event_loop()
