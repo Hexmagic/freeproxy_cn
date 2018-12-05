@@ -1,9 +1,11 @@
 import setuptools
+with open('README.rst') as f:
+    long_description = f.read()
 
 setuptools.setup(
     name='freeproxy_cn',
-    version='0.2',
-    description='抓取免费的中国代理',
+    version='0.5',
+    description=long_description,
     long_description='',
     author='Hexmagic',
     packages=setuptools.find_packages(),

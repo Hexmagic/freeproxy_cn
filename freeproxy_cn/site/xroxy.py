@@ -1,9 +1,8 @@
 from freeproxy_cn.core.channel import Channel
-from freeproxy_cn.util.pipe import to_doc, extra_head
 
 
 class Xroxy(Channel):
-    def __init__(self, proxy=None):
+    def __init__(self):
         super(Xroxy, self).__init__()
         self.name = 'xroxy'
         self.funcmap = {

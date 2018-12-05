@@ -9,6 +9,8 @@ from freeproxy_cn.site.seofang import SeoFang
 from freeproxy_cn.site.threeone import ThreeOneF
 from freeproxy_cn.site.xiaosu import XiaoSu
 from freeproxy_cn.site.xici import XiCi
+from freeproxy_cn.site.I337 import I337
+from freeproxy_cn.site.super import Super
 import asyncio
 from freeproxy_cn.core.engine import Engin
 
@@ -67,10 +69,20 @@ class TestChannel(unittest.TestCase):
         eng.set_site(XiCi)
         self.loop.run_until_complete(eng.run())
 
+    def test_super(self):
+        eng = Engin()
+        eng.set_site(Super)
+        self.loop.run_until_complete(eng.run())
+
+    def test_i337(self):
+        eng = Engin()
+        eng.set_site(I337)
+        self.loop.run_until_complete(eng.run())
+
 
 def main():
     testsuite = unittest.TestSuite()
-    testsuite.addTest(TestChannel('test_zdaye'))
+    testsuite.addTest(TestChannel('test_i337'))
     unittest.TextTestRunner(verbosity=2).run(testsuite)
 
 

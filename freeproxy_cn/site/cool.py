@@ -4,7 +4,7 @@ from base64 import b64decode
 
 
 class Cool(Channel):
-    def __init__(self, proxy=None):
+    def __init__(self):
         super(Cool, self).__init__()
         self.name = 'cool'
         self.funcmap = {

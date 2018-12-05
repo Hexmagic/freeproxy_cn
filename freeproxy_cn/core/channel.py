@@ -59,7 +59,7 @@ class Channel(object):
                     self.bucket = CuckooFilter()
                 new_proxies.append(p)
         if new_proxies:
-            await self.rdm.lpush('http', *new_proxies)
+            await self.rdm.lpush('https', *new_proxies)
 
     async def store_google(self, proxies):
         logger.info("{} grab {} valid google proxies".format(
@@ -78,6 +78,8 @@ class Channel(object):
             await self.rdm.lpush('http', *new_proxies)
 
     async def valid_google(self, proxies):
+        logger.info("{} start valid {} proxies".format(
+            self.name, len(proxies)))
         if not proxies:
             return
         valid_google = await self.valid_url('https://www.google.com', proxies)
@@ -85,6 +87,8 @@ class Channel(object):
             await self.store_google(valid_google)
 
     async def valid_ip(self, proxies):
+        logger.info("{} start valid {} proxies".format(
+            self.name, len(proxies)))
         valid_http = await self.valid_url('http://www.httpbin.org/', proxies)
         valid_https = await self.valid_url('https://www.ip.cn', proxies)
         if valid_http:
