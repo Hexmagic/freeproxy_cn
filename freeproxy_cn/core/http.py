@@ -4,18 +4,6 @@ import aiohttp
 from freeproxy_cn.util.pipe import extra_host
 
 
-class Empty(Exception):
-    pass
-
-
-class EmptyProxyException(Exception):
-    pass
-
-
-class RetryException(Exception):
-    pass
-
-
 def wrap_http(func):
     @wraps(func)
     async def catch_exp(*args, **kwargs):
@@ -26,7 +14,7 @@ def wrap_http(func):
         try:
             return await func(*args, **kwargs)
         except Exception:
-            return ''
+            return ""
 
     return catch_exp
 
@@ -40,15 +28,15 @@ class Http(object):
 
     @wrap_http
     async def get(
-            self,
-            url,
-            headers={},
-            proxy=None,
-            timeout=30,
-            params=None,
-            raw=False,
-            binary=True,
-            session=None
+        self,
+        url,
+        headers={},
+        proxy=None,
+        timeout=30,
+        params=None,
+        raw=False,
+        binary=True,
+        session=None,
     ):
         """
         session: reuse session
@@ -63,18 +51,13 @@ class Http(object):
         self.headers.update(headers)
         headers = self.headers
         headers["Host"] = url >> extra_host
-        headers['User-Agent'] = UserAgent().random()
+        headers["User-Agent"] = UserAgent().random()
         session = session or self.session
         if session.closed:
             session = aiohttp.ClientSession()
         proxy = proxy or self.proxy
         async with session.get(
-                url,
-                headers=headers,
-                proxy=proxy,
-                timeout=timeout,
-                params=params,
-                ssl=False,
+            url, headers=headers, proxy=proxy, timeout=timeout, params=params, ssl=False
         ) as res:
             if raw:
                 return res
@@ -90,16 +73,16 @@ class Http(object):
 
     @wrap_http
     async def post(
-            self,
-            url,
-            session=None,
-            headers={},
-            proxy=None,
-            timeout=30,
-            data=None,
-            json=None,
-            raw=False,
-            binary=False,
+        self,
+        url,
+        session=None,
+        headers={},
+        proxy=None,
+        timeout=30,
+        data=None,
+        json=None,
+        raw=False,
+        binary=True,
     ):
         """
         session: reuse session
@@ -119,16 +102,16 @@ class Http(object):
         if session.closed:
             session = aiohttp.ClientSession()
         headers["Host"] = url >> extra_host
-        headers['User-Agent'] = UserAgent().random()
+        headers["User-Agent"] = UserAgent().random()
         proxy = proxy or self.proxy
         async with session.post(
-                url,
-                headers=headers,
-                data=data,
-                json=json,
-                proxy=proxy,
-                timeout=timeout,
-                ssl=False,
+            url,
+            headers=headers,
+            data=data,
+            json=json,
+            proxy=proxy,
+            timeout=timeout,
+            ssl=False,
         ) as res:
             if binary:
                 content = await res.read()
