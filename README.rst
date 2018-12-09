@@ -16,7 +16,7 @@ Introduce
 .. image:: https://travis-ci.org/rajathagasthya/cuckoopy.svg?branch=master
     :target: https://travis-ci.org/rajathagasthya/cuckoopy
 
-Python Free China Http and Https Proxy, Grab Site List
+免费http/https代理，抓取列表
 
 + https://www.cool-proxy.net
 + http://lab.crossincode.com
@@ -52,3 +52,12 @@ Usage
     >>> import asyncio
     >>> loop = asyncio.get_event_loop()
     >>> loop.run_until_complete(Engin().run())
+
+查看Redis的db0，可以看到http和https两个list
+
+.. code-block:: python
+
+    >>> from redis import Redis
+    >>> rds = Redis()
+    >>> rds.lpop('http')
+    192.168.1.1
