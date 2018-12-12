@@ -16,7 +16,7 @@ Introduce
 .. image:: https://travis-ci.org/rajathagasthya/cuckoopy.svg?branch=master
     :target: https://travis-ci.org/rajathagasthya/cuckoopy
 
-免费http/https代理，抓取列表
+Free http/https China Proxy Grab
 
 + https://www.cool-proxy.net
 + http://lab.crossincode.com
@@ -53,7 +53,7 @@ Usage
     >>> loop = asyncio.get_event_loop()
     >>> loop.run_until_complete(Engin().run())
 
-查看Redis的db0，可以看到http和https两个list
+We can get http/https proxy from redis db 0
 
 .. code-block:: python
 
