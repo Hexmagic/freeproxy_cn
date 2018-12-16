@@ -59,5 +59,5 @@ We can get http/https proxy from redis db 0
 
     >>> from redis import Redis
     >>> rds = Redis()
-    >>> rds.lpop('http')
+    >>> rds.spop('http')
     192.168.1.1

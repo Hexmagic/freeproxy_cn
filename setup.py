@@ -5,7 +5,7 @@ with open("README.rst") as f:
 
 setuptools.setup(
     name="freeproxy_cn",
-    version="0.9",
+    version="1.0",
     description=long_description,
     long_description="",
     author="Hexmagic",
@@ -21,7 +21,6 @@ setuptools.setup(
         "aredis",
         "dummy_useragent",
         "python-dateutil",
-        "cockoopy",
     ],
     classifiers=[
         "Programming Language :: Python :: 3.5",

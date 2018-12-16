@@ -4,4 +4,4 @@ logzero
 aredis
 dummy_useragent
 python-dateutil
-cuckoopy
+
