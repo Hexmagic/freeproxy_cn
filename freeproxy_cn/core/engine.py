@@ -28,6 +28,7 @@ class Engin(object):
         self.grab_hk = grab_hk
         self.proxy_url = proxy_url
         self.sites = self.load_default_sites()
+        self.sem = asyncio.Semaphore(10)
 
     def load_default_sites(self):
         """
@@ -59,10 +60,11 @@ class Engin(object):
             funcs = site.funcmap.keys()
             for zp in zip(*site.funcmap.values()):
                 for func_param in zip(funcs, zp):
-                    func, param = func_param
-                    coro = func(param)
-                    await coro
-                    await asyncio.sleep(2)  # 并发抓取 容易封禁ip
+                    async with self.sem:
+                        func, param = func_param
+                        coro = func(param)
+                        await coro
+                        await asyncio.sleep(2)  # 并发抓取 容易封禁ip
 
     async def run(self):
         while True:
