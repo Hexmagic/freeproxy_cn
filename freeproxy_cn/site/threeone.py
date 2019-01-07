@@ -3,7 +3,7 @@ from freeproxy_cn.util.pipe import to_doc
 
 
 class ThreeOneF(Channel):
-    def __init__(self，** kwargs):
+    def __init__(self, ** kwargs):
         super(ThreeOneF, self).__init__(**kwargs)
         self.name = 'threeonef'
         self.td_idx = [2, 3]
