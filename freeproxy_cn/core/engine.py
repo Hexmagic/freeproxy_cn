@@ -16,6 +16,7 @@ class Engin(object):
         redis_port=6379,
         redis_password="",
         redis_db=0,
+        max_keep=float('inf')
     ):
         """
         proxy_url : 如要抓取香港代理需要设置代理
@@ -25,6 +26,7 @@ class Engin(object):
         self.rdm = aredis.StrictRedis(
             host=redis_host, port=redis_port, password=redis_password, db=redis_db
         )
+        self.max_keep = max_keep
         self.grab_hk = grab_hk
         self.proxy_url = proxy_url
         self.sites = self.load_default_sites()
@@ -36,7 +38,7 @@ class Engin(object):
         """
         sites = []
         for clas in CHAN1:
-            sites.append(clas())
+            sites.append(clas(max_keep=self.max_keep))
         if self.grab_hk:
             for clas in CHAN2:
                 sites.append(clas(self.proxy_url))

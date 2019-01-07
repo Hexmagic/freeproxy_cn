@@ -8,12 +8,13 @@ from collections import deque
 
 
 class Channel(object):
-    def __init__(self, proxy=None, *arg, **kwargs):
+    def __init__(self, proxy=None, max_keep=float('inf'), *arg, **kwargs):
         self.funcmap = defaultdict()
         self.http = Http()
         self.rdm = aredis.StrictRedis  # 这两行是为了代码提示，实际情况会由外部设置
         self.proxy = proxy
         self.name = "channel"
+        self.max_keep = max_keep
         self.start_pos = 2
         self.td_idx = [1, 2]
         self.bucket = deque(maxlen=10000)
@@ -29,7 +30,8 @@ class Channel(object):
         self.rdm = rdm
 
     async def store_http_proxies(self, proxies):
-        logger.info("{} grab {} valid http proxies".format(self.name, len(proxies)))
+        logger.info("{} grab {} valid http proxies".format(
+            self.name, len(proxies)))
         new_proxies = []
         for p in proxies:
             if p in self.bucket:
@@ -37,11 +39,15 @@ class Channel(object):
             else:
                 self.bucket.append(p)
                 new_proxies.append(p)
+        leng = self.rdm.scard('http')
+        if leng > self.max_keep:
+            return
         if new_proxies:
             await self.rdm.sadd("http", *new_proxies)
 
     async def store_https_proxies(self, proxies):
-        logger.info("{} grab {} valid https proxies".format(self.name, len(proxies)))
+        logger.info("{} grab {} valid https proxies".format(
+            self.name, len(proxies)))
         new_proxies = []
         for p in proxies:
             if p in self.bucket:
@@ -49,11 +55,15 @@ class Channel(object):
             else:
                 self.bucket.append(p)
                 new_proxies.append(p)
+        leng = self.rdm.scard('http')
+        if leng > self.max_keep:
+            return
         if new_proxies:
             await self.rdm.sadd("https", *new_proxies)
 
     async def store_google(self, proxies):
-        logger.info("{} grab {} valid google proxies".format(self.name, len(proxies)))
+        logger.info("{} grab {} valid google proxies".format(
+            self.name, len(proxies)))
         new_proxies = []
         for p in proxies:
             if p in self.bucket:
@@ -67,7 +77,8 @@ class Channel(object):
     async def valid_google(self, proxies):
         if not proxies:
             return
-        logger.info("{} start valid {} proxies".format(self.name, len(proxies)))
+        logger.info("{} start valid {} proxies".format(
+            self.name, len(proxies)))
         valid_google = await self.valid_url("https://www.google.com", proxies)
         if valid_google:
             await self.store_google(valid_google)
@@ -75,7 +86,8 @@ class Channel(object):
     async def valid_ip(self, proxies):
         if not proxies:
             return
-        logger.info("{} start valid {} proxies".format(self.name, len(proxies)))
+        logger.info("{} start valid {} proxies".format(
+            self.name, len(proxies)))
         valid_http = await self.valid_url("http://www.httpbin.org/", proxies)
         valid_https = await self.valid_url("https://www.ip.cn", proxies)
         if valid_http:
@@ -93,7 +105,8 @@ class Channel(object):
             proxy = "http://{}:{}".format(*proxy)
             tasks.append(
                 asyncio.ensure_future(
-                    self.http.get("http://www.httpbin.org/", proxy=proxy, raw=True)
+                    self.http.get("http://www.httpbin.org/",
+                                  proxy=proxy, raw=True)
                 )
             )
         responses = await asyncio.gather(*tasks)
