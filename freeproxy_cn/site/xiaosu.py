@@ -3,8 +3,8 @@ from freeproxy_cn.util.pipe import to_doc
 
 
 class XiaoSu(Channel):
-    def __init__(self):
-        super(XiaoSu, self).__init__()
+    def __init__(self, **kwargs):
+        super(XiaoSu, self).__init__(**kwargs)
         self.name = 'xiaosu'
 
     async def boostrap(self):

@@ -2,8 +2,8 @@ from freeproxy_cn.core.channel import Channel
 
 
 class Xroxy(Channel):
-    def __init__(self):
-        super(Xroxy, self).__init__()
+    def __init__(self, **kwargs):
+        super(Xroxy, self).__init__(**kwargs)
         self.name = 'xroxy'
         self.funcmap = {
             self.handle_hk: [

@@ -3,8 +3,8 @@ from freeproxy_cn.util.pipe import to_doc, extra_head
 
 
 class ProxyDocker(Channel):
-    def __init__(self):
-        super(ProxyDocker, self).__init__()
+    def __init__(self, **kwargs):
+        super(ProxyDocker, self).__init__(**kwargs)
         self.name = 'proxydocker'
         self.funcmap = {
             self.handle_hk: [

@@ -2,8 +2,8 @@ from freeproxy_cn.core.channel import Channel
 
 
 class XiCi(Channel):
-    def __init__(self):
-        super(XiCi, self).__init__()
+    def __init__(self, **kwargs):
+        super(XiCi, self).__init__(**kwargs)
         self.name = "xici"
         self.url_plt = [
             "http://www.xicidaili.com/wn/%s",

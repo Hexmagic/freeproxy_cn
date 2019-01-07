@@ -3,8 +3,8 @@ from freeproxy_cn.util.pipe import to_doc, extra_head
 
 
 class I337(Channel):
-    def __init__(self):
-        super(I337, self).__init__()
+    def __init__(self, **kwargs):
+        super(I337, self).__init__(**kwargs)
         self.name = 'i337'
         self.funcmap = {
             self.handle: ['https://proxy.l337.tech']

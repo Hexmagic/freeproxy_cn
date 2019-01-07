@@ -3,8 +3,8 @@ from freeproxy_cn.util.pipe import to_doc, extra_head
 
 
 class Idcloak(Channel):
-    def __init__(self, proxy=None):
-        super(Idcloak, self).__init__()
+    def __init__(self, proxy=None, **kwargs):
+        super(Idcloak, self).__init__(**kwargs)
         self.name = 'idcloak'
         self.funcmap = {
             self.handle_hk: [

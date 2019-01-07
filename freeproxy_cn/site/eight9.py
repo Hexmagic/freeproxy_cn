@@ -3,8 +3,8 @@ from freeproxy_cn.util.pipe import to_doc
 
 
 class Eight9(Channel):
-    def __init__(self):
-        Channel.__init__(self)
+    def __init__(self, **kwargs):
+        Channel.__init__(self, **kwargs)
         self.name = 'eight9'
         self.funcmap = {
             self.handle: [

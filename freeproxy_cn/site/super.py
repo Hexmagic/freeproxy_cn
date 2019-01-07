@@ -2,8 +2,8 @@ from freeproxy_cn.core.channel import Channel
 
 
 class Super(Channel):
-    def __init__(self):
-        super(Super, self).__init__()
+    def __init__(self, **kwargs):
+        super(Super, self).__init__(**kwargs)
         self.name = 'super'
         self.url_plt = 'http://www.superfastip.com/welcome/freeip/%s'
 

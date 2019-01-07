@@ -3,8 +3,8 @@ from freeproxy_cn.util.pipe import to_doc, extra_head
 
 
 class Nova(Channel):
-    def __init__(self, proxy=None):
-        super(Nova, self).__init__()
+    def __init__(self, proxy=None, **kwargs):
+        super(Nova, self).__init__(**kwargs)
         self.name = 'nova'
         self.funcmap = {
             self.handle_hk: [
