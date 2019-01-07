@@ -4,7 +4,7 @@ from base64 import b64decode
 
 
 class freeproxy_cnCz(Channel):
-    def __init__(self, proxy=None, **kwargs):
+    def __init__(self, **kwargs):
         super(freeproxy_cnCz, self).__init__(**kwargs)
         self.name = 'freeproxy_cn'
         self.funcmap = {

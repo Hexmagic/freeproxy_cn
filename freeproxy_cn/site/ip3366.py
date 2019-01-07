@@ -2,8 +2,8 @@ from freeproxy_cn.core.channel import Channel
 
 
 class Ip3366(Channel):
-    def __init__(self):
-        Channel.__init__(self)
+    def __init__(self, **kwargs):
+        super(Ip3366, self).__init__(**kwargs)
         self.name = 'ip3366'
         self.url_plt = 'http://www.ip3366.net/?stype=1&page=%s'
 

@@ -3,7 +3,7 @@ from freeproxy_cn.util.pipe import to_doc
 
 
 class MyProxy(Channel):
-    def __init__(self, proxy=None, **kwargs):
+    def __init__(self, **kwargs):
         super(MyProxy, self).__init__(**kwargs)
         self.name = 'myproxy'
         self.url_plt = 'https://www.my-proxy.com/free-proxy-list-%s.html'

@@ -3,7 +3,7 @@ from freeproxy_cn.util.pipe import to_doc, extra_head
 
 
 class Idcloak(Channel):
-    def __init__(self, proxy=None, **kwargs):
+    def __init__(self, **kwargs):
         super(Idcloak, self).__init__(**kwargs)
         self.name = 'idcloak'
         self.funcmap = {
