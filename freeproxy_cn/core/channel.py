@@ -55,7 +55,7 @@ class Channel(object):
             else:
                 self.bucket.append(p)
                 new_proxies.append(p)
-        leng = self.rdm.scard('http')
+        leng = await self.rdm.scard('http')
         if leng > self.max_keep:
             return
         if new_proxies:
