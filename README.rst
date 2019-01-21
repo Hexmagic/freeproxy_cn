@@ -61,3 +61,7 @@ We can get http/https proxy from redis db 0
     >>> rds = Redis()
     >>> rds.spop('http')
     192.168.1.1
+
+History
+############
+1.2 repair corountine bug
