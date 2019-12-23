@@ -1,11 +1,41 @@
-from datetime import datetime
-from datetime import timedelta
-import dateutil.parser
-import time
-from lxml import etree
-import json
 import functools
-import urllib.parse
+import json
+from collections import defaultdict
+from hashlib import md5
+from itertools import cycle, takewhile
+from typing import Dict, List, Union
+
+try:
+    from lxml import etree
+except ImportError as e:
+    lxml = None
+
+
+class Monad(str):
+    def __init__(self, data):
+        self.data = data
+        str.__init__(self)
+
+    def __getitem__(self, attr):
+        try:
+            return Monad(self.data[attr])
+        except Exception:
+            return Monad("")
+
+    def __repr__(self):
+        if not self.data:
+            return ""
+        else:
+            return self.data >> dumps_dict
+
+
+def monad(func):
+    @functools.wraps(func)
+    async def inner(*args, **kwargs):
+        rst = await func(*args, **kwargs)
+        return Monad(rst)
+
+    return inner
 
 
 class pipe(object):
@@ -29,88 +59,210 @@ class pipe(object):
 
 
 @pipe
-def to_dict(string):
-    string = string or '{}'
+def to_list(obj):
+    return list(obj)
+
+
+@pipe
+def xpath(doc, path=""):
+    rst = []
+    if isinstance(path, list):
+        for ele in path:
+            rst.append(doc.xpath(ele))
+        return rst
+    return doc.xpath(path)
+
+
+@pipe
+def to_str(obj):
+    return str(obj)
+
+
+@pipe
+def mget(obj, keys=[], default=None):
+    rst = []
+    for key in keys:
+        rst.append(obj.get(key, default))
+    return rst
+
+
+@pipe
+def trim(data):
+    return data.replace('"', "").replace("'", "").strip(" ").strip()
+
+
+@pipe
+def slice_by(lst, leng=3):
+    return [lst[i: i + leng] for i in range(0, len(lst), leng)]
+
+
+@pipe
+def group_by_key(lst: List[Dict], key: str = "") -> Dict[str, List]:
+    group:dict = defaultdict(list)
+    for ele in lst:
+        if isinstance(ele, dict):
+            val = ele.get(key)
+        else:
+            val = getattr(ele, key)
+        group[val].append(ele)
+    return group
+
+
+@pipe
+def group_by_len(lst, leng=10):
+    rst = []
+    tmp = []
+    for ele in lst:
+        tmp.append(ele)
+        if len(tmp) == leng:
+            rst.append(tmp)
+            tmp = []
+    if tmp:
+        rst.append(tmp)
+    return rst
+
+
+@pipe
+def split_into_n(lst, leng=4):
+    rst = []
+    for x in range(leng):
+        rst.append([])
+    for x, y in zip(cycle(range(leng)), lst):
+        rst[x].append(y)
+    return rst
+
+
+@pipe
+def split_by(lst, sep=None):
+    rst, tmp = [], []
+    for ele in lst:
+        if ele != sep:
+            tmp.append(ele)
+        else:
+            rst.append(tmp)
+            tmp = []
+    if tmp:
+        rst.append(tmp)
+    return rst
+
+
+@pipe
+def head(lst: list, default=""):
     try:
-        return json.loads(string)
+        return lst[0]
     except Exception:
+        return default
+
+
+@pipe
+def join(lst: list, sep="\t") -> str:
+    return sep.join(list(map(str, lst)))
+
+
+@pipe
+def safe_int(string: str, default=1) -> int:
+    try:
+        return int(string)
+    except Exception:
+        return default
+
+
+def dump(data: dict):
+    return str(data)
+
+
+@pipe
+def simple_dumps(data: dict):
+    return json.dumps(data, ensure_ascii=False)
+
+
+@pipe
+def dumps_dict(data: dict) -> str:
+    tmp = json.dumps(data, ensure_ascii=False).replace("'", "")
+    tj = json.loads(tmp)
+    tmp = eval(str(tj).replace('"', ""))
+    return json.dumps(tmp, ensure_ascii=False).replace("\\", "")
+
+
+@pipe
+def replace_lst_to(src: str, lstb: list, b="") -> str:
+    for ele in lstb:
+        src = src.replace(ele, b)
+    return src
+
+
+@pipe
+def to_int(data):
+    return int(data)
+
+
+@pipe
+def to_dict_safe(data):
+    try:
+        return json.loads(data)
+    except:
         return {}
 
 
 @pipe
-def to_doc(string):
-    string = string or '<error></error>'
-    return etree.HTML(string)
-
-
-@pipe
-def to_int(string):
-    return int(string)
-
-
-@pipe
-def extra_head(doc, path=''):
-    item = doc.xpath(path)
-    if not item:
-        return ''
-    return item[0].strip('" \r\n\t')
-
-
-@pipe
-def extra_host(url):
-    # 提取url中的Host
-    return urllib.parse.urlparse(url).netloc
-
-
-@pipe
-def check(create_time):
-    create_time = int(create_time)
-    tody = datetime.now().date().isoformat()
-    tody_timestamp = datetime.fromisoformat(tody).timestamp()
-    if len(str(int(create_time))) == 13:
-        if create_time >= tody_timestamp * 1000:
-            return True
-        return False
+def to_dict(data: Union[str, bytes], encoding="utf8") -> dict:
+    # 替换字符中含有的双引号
+    if isinstance(data, bytes):
+        data = data.decode(encoding)
+        try:
+            return json.loads(data)
+        except Exception:
+            data = data.replace('\\"', "")
+            return json.loads(data)
     else:
-        if create_time >= tody_timestamp:
-            return True
-        return False
+        try:
+            return json.loads(data)
+        except:
+            # 单引号
+            return eval(data)
 
 
 @pipe
-def cst_to_timestamp(cst_str):
-    tempTime = time.strptime(cst_str, '%a %b %d %H:%M:%S +0800 %Y')
-    resTime = time.strftime('%Y-%m-%d %H:%M:%S', tempTime)
-    rt = datetime.fromisoformat(resTime).timestamp()
-    return rt * 1000
+def to_xml(data):
+    if isinstance(data, str):
+        return etree.XML(data.encode("utf8"))
+    else:
+        return etree.XML(data)
 
 
 @pipe
-def date_to_timestamp(date_str):
-    date_str = date_str.split('-')
-    if len(date_str[1]) == 1:
-        date_str[1] = '0' + date_str[1]
-    date_str = '-'.join(date_str)
-    # linksfin 格式为’ 2018-8-09 12:12:12
-    date_str = date_str.strip()
-    return int(
-        datetime.fromisoformat(
-            date_str.replace("T", " ").replace(
-                'Z', '').strip().split(".")[0].split('+')[0]).timestamp() *
-        1000)
+def to_doc(data: str):
+    if isinstance(data, str):
+        return etree.HTML(data)
+    try:
+        return etree.HTML(data.decode("utf8"))
+    except:
+        return etree.HTML(data)
 
 
 @pipe
-def timestamp_to_date(stamp):
-    return str(datetime.fromtimestamp(stamp / 1000))
+def strip_group(data, trim):
+    while data.startswith(trim):
+        data = data[len(trim):]
+    while data.endswith(trim):
+        data = data[: -len(trim)]
+    return data
 
 
 @pipe
-def get13timestamp(none):
-    return int(time.time() * 1000)
+def to_md5(data) -> int:
+    if isinstance(data, list):
+        data = "".join(data)
+    md = md5()
+    md.update(data.encode("utf8"))
+    return str(md.hexdigest())
 
 
-@pipe
-def gmt_to_timestamp(gmt):
-    return int(
-        (dateutil.parser.parse(gmt) + timedelta(hours=8)).timestamp() * 1000)
+def main():
+    lst = ["ac", "ac"] >= pipe(str.replace)("a", "c")
+    print(lst)
+    print("abcdefghij" >> slice_by(3))
+
+
+if __name__ == "__main__":
+    main()

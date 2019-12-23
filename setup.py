@@ -1,11 +1,11 @@
 import setuptools
 
-with open("README.rst") as f:
+with open("README.rst",encoding='utf8') as f:
     long_description = f.read()
 
 setuptools.setup(
     name="freeproxy_cn",
-    version="1.3",
+    version="1.4",
     description=long_description,
     long_description="",
     author="Hexmagic",
@@ -18,12 +18,12 @@ setuptools.setup(
         "lxml",
         "aiohttp",
         "logzero",
-        "aredis",
+        "redis",
         "dummy_useragent",
         "python-dateutil",
     ],
     classifiers=[
-        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
         "Operating System :: OS Independent",
     ],
 )

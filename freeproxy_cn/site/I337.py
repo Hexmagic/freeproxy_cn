@@ -1,24 +1,24 @@
 from freeproxy_cn.core.channel import Channel
-from freeproxy_cn.util.pipe import to_doc, extra_head
+from freeproxy_cn.util.pipe import to_doc, xpath,head
+from typing import List, Tuple
 
 
 class I337(Channel):
+    site_name = 'proxy.l337.tech'
+    start_urls = ['https://proxy.l337.tech']
+
     def __init__(self, **kwargs):
         super(I337, self).__init__(**kwargs)
-        self.name = 'i337'
-        self.funcmap = {
-            self.handle: ['https://proxy.l337.tech']
-        }
 
-    async def handle(self, url):
-        content = await self.http.get(url)
+    async def handle(self, url: str) -> List[Tuple[str, str]]:
+        content = await self.http_handler.get(self.session, url)
         doc = content >> to_doc
-        items = doc >> extra_head('//pre/text()')
+        items = doc >> xpath('//pre/text()')>>head
         proxies = []
         for item in items.split('\n'):
             raw = item.strip('\r\t" ')
             if not raw:
                 continue
             [host, port] = raw.split(':')
-            proxies.append([host, port])
-        await self.valid_ip(proxies)
+            proxies.append((host, port))
+        return proxies

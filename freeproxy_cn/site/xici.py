@@ -2,6 +2,8 @@ from freeproxy_cn.core.channel import Channel
 
 
 class XiCi(Channel):
+    site_name = 'www.xicidaili.com'
+
     def __init__(self, **kwargs):
         super(XiCi, self).__init__(**kwargs)
         self.name = "xici"
@@ -12,10 +14,10 @@ class XiCi(Channel):
             "http://www.xicidaili.com/nt/%s",
         ]
 
-        self.td_idx = [2, 3]
+        self.positions = [2, 3]
 
-    async def boostrap(self):
+    async def bootstrap(self):
         urls = []
         for i in range(1, 3):
             urls += [plt % i for plt in self.url_plt]
-        self.funcmap = {self.handle: urls}
+        self.start_urls = urls
