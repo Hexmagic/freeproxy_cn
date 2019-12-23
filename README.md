@@ -27,15 +27,19 @@ pip install freeproxy_cn
 ```python
 >>> from freeproxy_cn import Engin
 >>> import asyncio
->>> loop = asyncio.get_event_loop()
+>>> valid_url = 'http://icanhazip.com'
+>>> loop = asyncio.get_event_loop(valid_url) #不传参默认的valid_url 为http://icanhazip.com
 >>> loop.run_until_complete(Engin().run())
 ```
 
 2. 获取代理
+
+**默认的代理存在redis的key为`http://icanhazip.com`中，实际情况中需要自己定义，例如你想抓取`https://www.baidu.com`，需要给engine传入`valid_url='https://www.baidu.com'`，并且使用`https://www.baidu.com`获取代理**
+
 ```python
 >>> from redis import Redis
 >>> rds = Redis()
->>> rds.spop('http://icanhazip.com')
+>>> rds.spop(valid_url) 
 192.168.1.1
 ```
 
