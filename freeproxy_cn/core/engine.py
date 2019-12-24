@@ -24,7 +24,8 @@ class Engin(object):
         valid_per_time=20,
         valid_url='http://icanhazip.com/',
         valid_timeout=5,
-        redis_db=0
+        redis_db=0,
+        sleep_time=20
     ):
         """
         param :
@@ -38,6 +39,7 @@ class Engin(object):
         self.name = "engin"
         self.vlaid_timeout = valid_timeout
         self.valid_url = valid_url
+        self.sleep_time = sleep_time
         self.rdc = redis.StrictRedis(
             host=redis_host, port=redis_port, password=redis_password, db=redis_db
         )
@@ -122,4 +124,4 @@ class Engin(object):
             logger.info("\n>>>>>>>>>>>\nstart valid proxies")
             proxies = await self.valid_proxies(proxies)
             self.store(proxies)
-            await asyncio.sleep(60 * 20)
+            await asyncio.sleep(60 * self.sleep_time)
