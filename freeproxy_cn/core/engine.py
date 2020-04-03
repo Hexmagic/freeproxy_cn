@@ -22,7 +22,7 @@ class Engin(object):
         redis_password="",
         valid_threads=4,
         valid_per_time=20,
-        valid_url='http://icanhazip.com/',
+        valid_url='http://icanhazip.com',
         valid_timeout=5,
         redis_db=0,
         sleep_time=20
