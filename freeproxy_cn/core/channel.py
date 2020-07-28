@@ -24,28 +24,29 @@ class Channel(object):
         await self.bootstrap()
         rst = []
         for url in tqdm(self.start_urls, desc=f'{self.site_name} Grab'):
-            proxies = await self.handle(url)
+            try:
+                proxies = await self.handle(url)
+            except:
+                proxies = []
             rst += proxies
         await self.session.close()
         return rst
 
     async def handle(self, url: str) -> List[Tuple[str, str]]:
-        try:
-            doc = await self.http_handler.get(self.session, url,timeout=5) >> to_doc
-            items = doc.xpath("//table//tr[position()>=%s]" % self.start_pos)
-            proxies = []
-            for item in items:
-                host_position, port_position = self.positions
-                host = item >> xpath(self.xpath_plt.format(
-                    host_position)) >> head >> trim
-                if not host:
-                    # 匹配失败
-                    continue
-                port = item >> xpath(self.xpath_plt.format(
-                    port_position)) >> head >> trim
-                if len(port) > 5:
-                    continue
-                proxies.append((host, port))
-            return proxies
-        except:
-            return []
+        doc = await self.http_handler.get(self.session, url,timeout=5) >> to_doc
+        items = doc.xpath("//table//tr[position()>=%s]" % self.start_pos)
+        proxies = []
+        for item in items:
+            host_position, port_position = self.positions
+            host = item >> xpath(self.xpath_plt.format(
+                host_position)) >> head >> trim
+            if not host:
+                # 匹配失败
+                continue
+            port = item >> xpath(self.xpath_plt.format(
+                port_position)) >> head >> trim
+            if len(port) > 5:
+                continue
+            proxies.append((host, port))
+        return proxies
+        
