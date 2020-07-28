@@ -5,7 +5,7 @@ with open("README.rst",encoding='utf8') as f:
 
 setuptools.setup(
     name="freeproxy_cn",
-    version="1.4",
+    version="1.6",
     description=long_description,
     long_description="",
     author="Hexmagic",

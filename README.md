@@ -28,8 +28,8 @@ pip install freeproxy_cn
 >>> from freeproxy_cn import Engin
 >>> import asyncio
 >>> valid_url = 'http://icanhazip.com'
->>> loop = asyncio.get_event_loop(valid_url) #不传参默认的valid_url 为http://icanhazip.com
->>> loop.run_until_complete(Engin().run())
+>>> loop = asyncio.get_event_loop() #不传参默认的valid_url 为http://icanhazip.com
+>>> loop.run_until_complete(Engin(valid_url).run())
 ```
 
 2. 获取代理

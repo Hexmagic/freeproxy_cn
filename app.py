@@ -4,6 +4,6 @@ import asyncio
 loop = asyncio.get_event_loop()
 
 eng = Engin(redis_host="127.0.0.1", redis_port=6379,
-            redis_db=0, redis_password="")
+            redis_db=0, redis_password="",valid_url='https://www.xinmapei.com')
 eng.site_list()
 loop.run_until_complete(asyncio.gather(eng.run()))
