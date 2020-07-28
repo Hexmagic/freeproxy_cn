@@ -12,6 +12,7 @@ parser.add_argument('--valid_timeout',
                     help='验证代理请求指定url的timeout')
 parser.add_argument('--redis_db', type=str, default=0, help='存储代理的redis数据库')
 parser.add_argument('--valid_threads', type=int, default=4, help='验证使用的线程数')
+parser.add_argument('--sleep_m', type=int, default=20, help='抓取间隔，默认20分组')
 opt = parser.parse_args()
 loop = asyncio.get_event_loop()
 
