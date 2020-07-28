@@ -81,13 +81,19 @@ class Engin(object):
             验证代理有效性，这里只做了https的代理验证，这里我们已百度为目标
             '''
             host, port = proxy
-            response = await http_handler.get(session=session, url=self.valid_url, proxy=f'http://{host}:{port}', timeout=self.valid_timeout)
-            return (proxy, True) if response else (proxy, False)
+            response = None
+            try:
+                response = await http_handler.get(session=session, url=self.valid_url, proxy=f'http://{host}:{port}', timeout=self.valid_timeout)
+            except:
+                return (proxy, False)
+            if not response:
+                return (proxy,False)
+            return (proxy, True)
 
         async def _valid_job(proxies):
             rst: List = []
-            thname = threading.current_thread().getName()
-            for proxy_list in tqdm(proxies >> slice_by(self.valid_per_time), desc=f"{thname} Valid Process"):
+            thname = threading.current_thread().getName().split('_')[-1]            
+            for proxy_list in tqdm(proxies >> slice_by(self.valid_per_time), desc=f"Valid Process {thname}"):
                 tasks = [valid_proxy(proxy) for proxy in proxy_list]
                 rst += await asyncio.gather(*tasks)
             return rst

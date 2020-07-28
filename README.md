@@ -7,13 +7,13 @@
 ```
 [1]: lab.crossincode.com ❌
 [2]: 89ip ❌
-[3]: www.ip3366.net  ❌
+[3]: www.ip3366.net  ✅
 [4]: ip.jiangxianli.com ✅
 [5]: www.kuaidaili.com ✅
 [6]: www.xsdaili.com  ✅
 [7]: www.xicidaili.com ✅
 [8]: www.superfastip.com ✅
-[9]: www.freeip.top ❌
+[9]: http://www.66ip.cn/ ✅
 ```
 
 ### 安装 和使用

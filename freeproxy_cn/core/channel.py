@@ -12,6 +12,7 @@ class Channel(object):
 
     def __init__(self, debug=False, *arg, **kwargs):
         self.http_handler = AsyncHttpHandler()
+        self.session = aiohttp.ClientSession()
         self.start_pos = 2
         self.positions = [1, 2]
         self.xpath_plt = './td[position()={}]//text()'
@@ -20,7 +21,6 @@ class Channel(object):
         return
 
     async def run(self):
-        self.session = aiohttp.ClientSession()
         await self.bootstrap()
         rst = []
         for url in tqdm(self.start_urls, desc=f'{self.site_name} Grab'):

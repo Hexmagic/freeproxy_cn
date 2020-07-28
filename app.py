@@ -6,6 +6,7 @@ parser.add_argument('--valid_url', type=str, default='https://www.baidu.com')
 parser.add_argument('--redis_host', type=str, default='localhost')
 parser.add_argument('--redis_port', type=int, default=6379)
 parser.add_argument('--redis_password', type=str, default='')
+parser.add_argument('--valid_per_time', type=int, default=5)
 parser.add_argument('--valid_timeout',
                     type=int,
                     default=5,
@@ -22,6 +23,7 @@ eng = Engin(redis_host=opt.redis_host,
             redis_password=opt.redis_password,
             valid_timeout=opt.valid_timeout,
             valid_threads=opt.valid_threads,
+            valid_per_time=5,
             valid_url=opt.valid_url)
 eng.site_list()
 loop.run_until_complete(asyncio.gather(eng.run()))
