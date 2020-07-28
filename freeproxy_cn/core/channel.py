@@ -31,7 +31,7 @@ class Channel(object):
 
     async def handle(self, url: str) -> List[Tuple[str, str]]:
         try:
-        doc = await self.http_handler.get(self.session, url,timeout=5) >> to_doc
+            doc = await self.http_handler.get(self.session, url,timeout=5) >> to_doc
             items = doc.xpath("//table//tr[position()>=%s]" % self.start_pos)
             proxies = []
             for item in items:
